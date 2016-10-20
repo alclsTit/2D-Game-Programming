@@ -13,7 +13,7 @@ from pico2d import *
 
 #음악재생
 pygame.mixer.init()
-sound = pygame.mixer.Sound("Sound01.wav")
+sound = pygame.mixer.Sound("Evans[jubeat]_stage01.wav")
 
 
 background = PBackground.Background()
@@ -34,12 +34,13 @@ def handle_events():
             PCharacter.Player.jump_state = True
 
 running = True
+run_sound = True
 state = 0
 
 #PTile.Tile_List
 
 
-show_lattice()
+#show_lattice()
 
 while(running):
    handle_events()
@@ -71,7 +72,10 @@ while(running):
 
    update_canvas()
 
-   sound.play()
+    #시작부터 40초 걸림
+   if(run_sound == True):
+        sound.play()
+        run_sound = False
 
    delay(0.1)
 
