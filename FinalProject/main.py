@@ -6,6 +6,8 @@ import PTile
 import PObstacle
 import pygame
 import time
+import PObject
+import GameManager
 
 from pico2d import *
 
@@ -19,6 +21,8 @@ sound = pygame.mixer.Sound("Evans[jubeat]_stage01.wav")
 background = PBackground.Background()
 character = PCharacter.Player()
 obstacle = PObstacle.Obstacle()
+stage_object = PObject.StageObject()
+meso = PObject.Point_meso()
 # 초기화 부분
 
 def handle_events():
@@ -55,6 +59,11 @@ while(running):
    for PObstacle.Obstacle in PObstacle.List_obstacle:
        PObstacle.Obstacle.Update()
 
+   meso.Update_meso()
+   #for PObject.StageObejct in PObject.List_meso:
+   #    PObject.StageObject.Update_meso()
+
+   stage_object.Update()
    clear_canvas()
    #for PTile.Brick in var_steps:
    #    PTile.Brick.Update()
@@ -62,13 +71,20 @@ while(running):
    # 렌더링 부분
    background.Draw()
 
+   #for PObject.StageObejct in PObject.List_meso:
+   #    PObject.StageObject.Draw_Meso()
+
    for PObstacle.Obstacle in PObstacle.List_obstacle:
        PObstacle.Obstacle.Draw()
+
+   meso.Draw_Meso()
 
    character.Draw()
 
    for PTile.Brick in PTile.List_tile:
        PTile.Brick.Draw()
+
+   stage_object.Draw()
 
    update_canvas()
 
