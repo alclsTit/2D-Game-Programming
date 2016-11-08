@@ -84,13 +84,13 @@ def run(start_state):
     stack = [start_state]
     start_state.enter()
 
-    current_time = time.perf_counter()
+    current_time = time.perf_counter()  #루프 진입전 시간을 체크
     while (running):
-        if time.perf_counter() - current_time > UPDATE_DELAY:
-            current_time = time.perf_counter()
-            stack[-1].handle_events(frame_time)
-            stack[-1].update(frame_time)
-            stack[-1].draw(frame_time)
+        frame_time = time.perf_counter() - current_time   #현재시간 - 이전시간
+        current_time += frame_time
+        stack[-1].handle_events(frame_time)
+        stack[-1].update(frame_time)
+        stack[-1].draw(frame_time)
 
     # repeatedly delete the top of the stack
     while (len(stack) > 0):
@@ -100,7 +100,7 @@ def run(start_state):
 
 def reset_time():
     global current_time
-    current_time = time.clock()
+    current_time = time.perf_counter()
 
 def test_game_framework():
     start_state = TestGameState('StartState')
