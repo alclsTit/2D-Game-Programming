@@ -4,18 +4,11 @@ import PCharacter
 import PTile
 import Collision
 import GameManager
+import RES
 
 character = PCharacter.Player()
 
 class StageObject:
-    #파도 이미지
-    Wave_image = None
-
-    #돌고래 이미지
-    dolpin_image= None
-
-   #m_dolpin_timer = 0
-   #m_dolpin_stop = 0
 
     def __init__(self):
         #[파도 애니메이션]발판 오브젝트보다 낮게 구현
@@ -31,20 +24,11 @@ class StageObject:
         self.dolpin_frame = 0
         self.dolpin_stop = 0
 
-
-
-        #[스테이지 오브젝트 이미지 로드]
-        if(StageObject.Wave_image == None):
-            StageObject.Wave_image = load_image('Wave.png')
-        if(StageObject.dolpin_image == None):
-            StageObject.dolpin_image = load_image('dolpin_m.png')
-
-
     def Update(self):
         #파도 업데이트
-        self.front_x += 50
-        self.mid_x += 50
-        self.back_x -= 50
+        self.front_x += 20
+        self.mid_x += 20
+        self.back_x -= 20
 
         if(self.front_x >= 1500):
             self.front_x = 0
@@ -57,9 +41,9 @@ class StageObject:
 
          #돌고래 업데이트
         self.dolpin_timer += 1
-        if( self.dolpin_timer  >= 40):
+        if( self.dolpin_timer  >= 160):
 
-            self.dolpin_stop = (self.dolpin_stop + 1) % 3
+            self.dolpin_stop = (self.dolpin_stop + 1) %11
 
             if(self.dolpin_state == 0 and self.dolpin_stop == 1 ):
                 self.show_dolpin = True
@@ -79,7 +63,7 @@ class StageObject:
                 self.dol_pos_y -= 80
 
 
-            if (self.dolpin_stop == 2):
+            if (self.dolpin_stop == 10):
                 self.dolpin_state += 1
                 self.dolpin_frame += 1
 
@@ -92,14 +76,14 @@ class StageObject:
                 self.dol_pos_y = 50
 
     def Draw(self):
-         StageObject.Wave_image.draw(self.front_x, self.front_y)
-         StageObject.Wave_image.draw(self.mid_x, self.mid_y)
-         StageObject.Wave_image.draw(self.back_x, self.back_y)
+         RES.res.Wave_image.draw(self.front_x, self.front_y)
+         RES.res.Wave_image.draw(self.mid_x, self.mid_y)
+         RES.res.Wave_image.draw(self.back_x, self.back_y)
 
          if (self.show_dolpin == True):
-            StageObject.dolpin_image.clip_draw(self.dolpin_frame * 200, 0, 200, 200, self.dol_pos_x,
+             RES.res.dolpin_image.clip_draw(self.dolpin_frame * 200, 0, 200, 200, self.dol_pos_x,
                                                self.dol_pos_y)
-            StageObject.dolpin_image.clip_draw(self.dolpin_frame * 200, 0, 200, 200, self.dol_pos_x - 200,
+             RES.res.dolpin_image.clip_draw(self.dolpin_frame * 200, 0, 200, 200, self.dol_pos_x - 200,
                                                self.dol_pos_y)
 
     #def Update_meso(self):
@@ -145,16 +129,6 @@ class StageObject:
 class Point_meso:
     meso_counting = 0
 
-    #메소 이미지
-    bronze_meso_image = None
-    Big_bronze_meso_image = None
-
-    silver_meso_image = None
-    Big_silver_meso_image = None
-
-    gold_meso_image = None
-    Big_gold_meso_image = None
-
     #메소의 이전 위치값 계산변수
     prev_meso_x = 0
     prev_meso_y = 0
@@ -165,10 +139,13 @@ class Point_meso:
     bronze_point , silver_point , gold_point = 20 ,50 ,100
     IsFirst = True
     coin_num = 0
+    meso_range = 50
     def __init__(self):
         # 메소 x,y값 초기화
         self.meso_x , self.meso_y = 0 , 0
+
         self.meso_frame_x , self.meso_frame_y = 0 , 1
+        self.meso_total_frame_x = 0
 
         self.define_meso_pos = 0
 
@@ -217,7 +194,7 @@ class Point_meso:
                         self.meso_rand_y = -150
 
                     if (self.define_meso_pos == 0):
-                        self.meso_x = PTile.Brick.mid_x - (PTile.Brick.Brick_width_range / 2) + self.meso_width_size
+                        self.meso_x = PTile.Brick.mid_x - (PTile.Brick.Brick_width_range / 2) + Point_meso.meso_range
                         self.meso_y = PTile.Brick.mid_y + (PTile.Brick.Brick_height_range / 2) + self.meso_height_size
 
                         self.define_meso_pos += 1
@@ -231,7 +208,7 @@ class Point_meso:
                         else:
                             self.point = self.gold_point
                     else:
-                        self.meso_x = Point_meso.prev_meso_x + self.meso_width_size + 5
+                        self.meso_x = Point_meso.prev_meso_x + self.meso_width_size + Point_meso.meso_range
                         self.meso_y = Point_meso.prev_meso_y + self.meso_rand_y
 
                         #최대로 메소가 생성 될 수 있는 위치 500
@@ -245,67 +222,69 @@ class Point_meso:
                     Point_meso.prev_meso_y = self.meso_y
 
                     #메소저장소(x, y위치 , 프레임x,y ,포인트 , 삭제카운트)
-                    self.Store_meso = [self.meso_x , self.meso_y , self.meso_frame_x, self.meso_frame_y , self.point , self.disappear_cnt, self.IsDamaged]
+                    self.Store_meso = [self.meso_x , self.meso_y , self.meso_frame_x, self.meso_frame_y , self.point , self.disappear_cnt, self.IsDamaged, self.meso_total_frame_x]
 
                     #코인 수 저장
                     Point_meso.coin_num += 1
+                    Point_meso.meso_total_frame_x = 0
                     # 메소 리스트 만들어 위치(x,y)값 , 프레임값, 포인트값 집어넣기
                     GameManager.List_meso.append(self.Store_meso)
-
-        if(Point_meso.bronze_meso_image == None):
-            Point_meso.bronze_meso_image = load_image('bronze_meso.png')
-        if (Point_meso.silver_meso_image == None):
-            Point_meso.silver_meso_image = load_image('silver_meso.png')
-        if (Point_meso.gold_meso_image == None):
-            Point_meso.gold_meso_image = load_image('gold_meso.png')
 
     def Update_meso(self):
        #메소(포인트) 업데이트
        for i in range(self.coin_num):
-             #화면에 보이는 메소들만 충돌체크
-             if(GameManager.List_meso[i][0] >= 0 and GameManager.List_meso[i][0] <= 1500):
-                    if(Collision.collide_for_coin(character,self,i)):
-                        GameManager.List_meso[i][3] = 0
-                        GameManager.List_meso[i][6] = True
+             #if(GameManager.List_meso[i][0] >= 0 and GameManager.List_meso[i][0] <= 1500):  #화면에 보이는 메소들만 충돌체크
+             if(Collision.collide_for_coin(character,self,i)):
+                GameManager.List_meso[i][3] = 0
+                GameManager.List_meso[i][6] = True
 
-             if (character.move_x >= 500):
+             if (PCharacter.Player.move_x >= 500):
                   GameManager.List_meso[i][0] -= character.move_size
-
-       # 메소와 캐릭터간의 충돌체크
-       for Point_meso.meso_counting in range(self.coin_num):
-           if(GameManager.List_meso[i][6] == True):
-               if(GameManager.List_meso[i][5] == 4):
-                   #self.List_meso[i][6] = False
-                   GameManager.List_meso.remove(GameManager.List_meso[i])
-                   self.coin_num  -= 1
-                   Point_meso.meso_counting -= 1
-               else:
-                   if (GameManager.List_meso[i][5] == 0):
-                       GameManager.List_meso[i][1] += 5
-                   elif (GameManager.List_meso[i][5] == 1):
-                       GameManager.List_meso[i][1] += 5
-                   elif (GameManager.List_meso[i][5] == 2):
-                       GameManager.List_meso[i][1] += 5
-                   elif (GameManager.List_meso[i][5] == 3):
-                       GameManager.List_meso[i][1] += 10
-                   GameManager.List_meso[i][5] += 1
 
        Point_meso.meso_counting = 0
 
+       #메소 프레임 업데이트
+       for Point_meso.meso_counting in range(self.coin_num):
+           GameManager.List_meso[Point_meso.meso_counting][2] = (GameManager.List_meso[Point_meso.meso_counting][2] + 1) % 11
+           if(GameManager.List_meso[Point_meso.meso_counting][2] == 10):
+               GameManager.List_meso[Point_meso.meso_counting][7] = (GameManager.List_meso[Point_meso.meso_counting][7] + 1) % 4
 
+       Point_meso.meso_counting = 0
+
+       # 메소와 캐릭터간의 충돌체크
+       for Point_meso.meso_counting in range(self.coin_num):
+           if(GameManager.List_meso[Point_meso.meso_counting][6] == True):
+               if(GameManager.List_meso[Point_meso.meso_counting][5] == 4):
+                   #self.List_meso[i][6] = False
+                   GameManager.List_meso.remove(GameManager.List_meso[Point_meso.meso_counting])
+                   self.coin_num  -= 1
+                   break
+                   #Point_meso.meso_counting -= 1
+               else:
+                   if (GameManager.List_meso[Point_meso.meso_counting][5] == 0):
+                       GameManager.List_meso[Point_meso.meso_counting][1] += 5
+                   elif (GameManager.List_meso[Point_meso.meso_counting][5] == 1):
+                       GameManager.List_meso[Point_meso.meso_counting][1] += 10
+                   elif (GameManager.List_meso[Point_meso.meso_counting][5] == 2):
+                       GameManager.List_meso[Point_meso.meso_counting][1] += 15
+                   elif (GameManager.List_meso[Point_meso.meso_counting][5] == 3):
+                       GameManager.List_meso[Point_meso.meso_counting][1] += 20
+                   GameManager.List_meso[Point_meso.meso_counting][5] += 1
+
+       Point_meso.meso_counting = 0
 
     def collide_meso(self,meso_num):
-       return GameManager.List_meso[meso_num][0] - self.meso_width_size , GameManager.List_meso[meso_num][0] - self.meso_height_size, GameManager.List_meso[meso_num][0] + self.meso_width_size , GameManager.List_meso[meso_num][0] + self.meso_height_size
+       return GameManager.List_meso[meso_num][0] - self.meso_width_size , GameManager.List_meso[meso_num][1] - self.meso_height_size, GameManager.List_meso[meso_num][0] + self.meso_width_size , GameManager.List_meso[meso_num][1] + self.meso_height_size
 
 
     def Draw_Meso(self):
         for i in range(self.coin_num):
-            if (GameManager.List_meso[i][4] == 20):
-                Point_meso.bronze_meso_image.clip_draw(GameManager.List_meso[i][2] * 50, GameManager.List_meso[i][3] * 40, 50, 40, GameManager.List_meso[i][0] ,GameManager.List_meso[i][1])
+            if (GameManager.List_meso[i][4] == 20): #x_frame, y_frame, width / 2, height / 2, x_pos, y_pos
+                RES.res.bronze_meso_image.clip_draw(GameManager.List_meso[i][7] * 50, GameManager.List_meso[i][3] * 40, 50, 40, GameManager.List_meso[i][0] ,GameManager.List_meso[i][1])
             elif(GameManager.List_meso[i][4] == 50):
-                Point_meso.silver_meso_image.clip_draw(GameManager.List_meso[i][2] * 50, GameManager.List_meso[i][3] * 40, 50, 40, GameManager.List_meso[i][0] ,GameManager.List_meso[i][1])
+                RES.res.silver_meso_image.clip_draw(GameManager.List_meso[i][7] * 50, GameManager.List_meso[i][3] * 40, 50, 40, GameManager.List_meso[i][0] ,GameManager.List_meso[i][1])
             elif(GameManager.List_meso[i][4] == 100):
-                Point_meso.gold_meso_image.clip_draw(GameManager.List_meso[i][2] * 50, GameManager.List_meso[i][3] * 40, 50, 40, GameManager.List_meso[i][0] ,GameManager.List_meso[i][1])
+                RES.res.gold_meso_image.clip_draw(GameManager.List_meso[i][7] * 50, GameManager.List_meso[i][3] * 40, 50, 40, GameManager.List_meso[i][0] ,GameManager.List_meso[i][1])
 
 
 
