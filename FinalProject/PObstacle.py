@@ -3,6 +3,7 @@ import PTile
 import PCharacter
 import random
 import Collision
+import RES
 
 List_obstacle = []
 
@@ -12,9 +13,6 @@ tile = PTile.Brick()
 class Obstacle:
 
     pos_x , pos_y = 0 , 0
-    First_Obstacle = None
-    Second_Obstacle = None
-
     Switch_Obstacle = 0
     Obstacle_cnt = 0
 
@@ -72,22 +70,20 @@ class Obstacle:
                 self.x = PTile.Brick.mid_x + random.randint(0, self.Brick_width_range / 4)
                 self.y = PTile.Brick.mid_y + self.Brick_height_range / 2 + self.height - 10
                 self.frame_x = 0
+                self.total_frame_x = 0
                 self.frame_y = random.randint(1, 2)
 
                 List_obstacle.append(self)
             break
-
-        if (Obstacle.First_Obstacle == None):
-            Obstacle.First_Obstacle = load_image('Obstacle01.png')
-        if (Obstacle.Second_Obstacle == None):
-           Obstacle.Second_Obstacle = load_image('Obstacle02.png')
 
     def get_bb(self):
         if (self.Obstacle_num == 1 or self.Obstacle_num == 2):
             return self.x - 50, self.y - 50, self.x + 50, self.y + 50
 
     def Update(self):
-        self.frame_x = (self.frame_x + 1) % 7
+        self.frame_x = (self.frame_x + 1) % 6
+        if(self.frame_x == 5):
+            self.total_frame_x = (self.total_frame_x + 1) % 7
 
         if(self.die_flag == True):
             self.die_cnt -= 1
@@ -108,13 +104,12 @@ class Obstacle:
             self.die_flag = True
 
 
-
     def Draw(self):
         if(self.Obstacle_num == 1):
-            self.First_Obstacle.clip_draw(self.frame_x * 100, self.frame_y * 100, 100 ,100, self.x, self.y)
+            RES.res.First_Obstacle.clip_draw(self.total_frame_x * 100, self.frame_y * 100, 100 ,100, self.x, self.y)
 
         if(self.Obstacle_num == 2):
-            self.Second_Obstacle.clip_draw(self.frame_x * 100, self.frame_y * 100, 100, 100, self.x, self.y)
+            RES.res.Second_Obstacle.clip_draw(self.total_frame_x * 100, self.frame_y * 100, 100, 100, self.x, self.y)
 
 
 temp = [Obstacle() for i in range(20)]
