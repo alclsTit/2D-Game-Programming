@@ -4,6 +4,7 @@ from pico2d import *
 import random
 import PCharacter
 import Collision
+import RES
 
 name = "PTile"
 
@@ -25,14 +26,6 @@ class Brick:
     state = 0
     cnt = 0
     #클래스 변수 ->객체가 공유
-    FBrickImage = None
-    SBrickImage = None
-    TBrickImage = None
-    FOBrickImage = None
-    FloatingImage_one = None
-    FloatingImage_two = None
-    FCloud = None
-    SCloud = None
 
     def __init__(self):
         if (Brick.state == 0):
@@ -128,25 +121,6 @@ class Brick:
             self.mid_y = self.next_mid_y
 
             #self.num = Brick.select_num
-
-            # 발판 오브젝트 이미지 로드
-            if (Brick.FBrickImage == None):
-                Brick.FBrickImage = load_image('Brick_First.png')
-            if (Brick.SBrickImage == None):
-                Brick.SBrickImage = load_image('Brick_Second.png')
-            if (Brick.TBrickImage == None):
-                Brick.TBrickImage = load_image('Brick_Third.png')
-            if (Brick.FOBrickImage == None):
-                Brick.FOBrickImage = load_image('Brick_Fourth.png')
-            if (Brick.FloatingImage_one == None):
-                Brick.FloatingImage_one = load_image('Floating_one.png')
-            if (Brick.FloatingImage_two == None):
-                Brick.FloatingImage_two = load_image('Floating_two.png')
-            if (Brick.FCloud == None):
-                Brick.FCloud = load_image('Cloud_one.png')
-            if (Brick.SCloud == None):
-                Brick.SCloud = load_image('Cloud_two.png')
-
             List_tile.append(self)
 
     def get_bb(self):
@@ -185,7 +159,7 @@ class Brick:
         #    return self.mid_x - 300, self.mid_y - 40, self.mid_x + 300, self.mid_y + 40
 
     def Update(self):
-        if(character.move_x >= 500):
+        if(PCharacter.Player.move_x >= 500):
             self.mid_x -= character.move_size
 
         if(self.mid_x < - 1000):
@@ -219,21 +193,21 @@ class Brick:
     def Draw(self):
         print(self.mid_x, self.mid_y, self.num)
         if(self.num == 1):
-            Brick.FBrickImage.draw(self.mid_x,self.mid_y)
+            RES.res.FBrickImage.draw(self.mid_x,self.mid_y)
         elif(self.num == 2):
-            Brick.SBrickImage.draw(self.mid_x, self.mid_y)
+            RES.res.SBrickImage.draw(self.mid_x, self.mid_y)
         elif(self.num == 3):
-            Brick.TBrickImage.draw(self.mid_x, self.mid_y)
+            RES.res.TBrickImage.draw(self.mid_x, self.mid_y)
         elif(self.num == 4):
-            Brick.FOBrickImage.draw(self.mid_x, self.mid_y)
+            RES.res.FOBrickImage.draw(self.mid_x, self.mid_y)
         elif(self.num == 5):
-            Brick.FloatingImage_one.draw(self.mid_x, self.mid_y)
+            RES.res.FloatingImage_one.draw(self.mid_x, self.mid_y)
         elif(self.num == 6):
-            Brick.FloatingImage_two.draw(self.mid_x, self.mid_y)
+            RES.res.FloatingImage_two.draw(self.mid_x, self.mid_y)
         elif(self.num == 7):
-            Brick.FCloud.draw(self.mid_x, self.mid_y)
+            RES.res.FCloud.draw(self.mid_x, self.mid_y)
         elif (self.num == 8):
-            Brick.SCloud.draw(self.mid_x, self.mid_y)
+            RES.res.SCloud.draw(self.mid_x, self.mid_y)
 
 #발판 생성자 다수생성 -> 임시값
 temp = [Brick() for i in range(20)]
