@@ -40,8 +40,7 @@ class Player:
 
     def __init__(self):
         self.x , self.y = 0 , 200
-        self.frame_x = 0
-        self.frame_y = 9
+        self.frame_, self.frame_y = 0 , 9
         self.hp = 100
         self.total_frames = 0.0
         self.jump_cnt = 0
@@ -65,19 +64,19 @@ class Player:
                 self.total_jump_cnt = (self.total_jump_cnt + 1) % 6
 
             if(self.total_jump_cnt == 1):
-                self.move_y += 100 #Player.RUN_SPEED_MPS * 2
+                self.y += 20 #Player.RUN_SPEED_MPS * 2
             elif(self.total_jump_cnt == 2):
-                self.move_y += 70 #Player.RUN_SPEED_MPS * 2
+                self.y += 50 #Player.RUN_SPEED_MPS * 2
             elif (self.total_jump_cnt == 3):
-                self.move_y += 50 #Player.RUN_SPEED_MPS * 2
+                self.y -= 30 #Player.RUN_SPEED_MPS * 2
             elif(self.total_jump_cnt == 4):
-                self.move_y += 20 #Player.RUN_SPEED_MPS * 2
-            elif(self.total_jump_cnt == 5):
+                self.y -= 10 #Player.RUN_SPEED_MPS * 2
+            elif(self.total_jump_cnt >= 5):
                 Player.jump_state = False
         else:
-            self.move_y -= Player.RUN_SPEED_MPS * 2
+                self.y -= 2
 
-        Player.move_y = self.move_y
+        Player.move_y = self.y
 
     def get_bb(self):
          return Player.move_x - 50, Player.move_y - 50, Player.move_x + 50, Player.move_y + 50
