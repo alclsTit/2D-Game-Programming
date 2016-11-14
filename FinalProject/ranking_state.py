@@ -2,11 +2,13 @@ import GameFramework
 import RES
 from pico2d import *
 
-
 import main_state
+import PCharacter
 
 name = "ranking_state"
 font = None
+
+character = PCharacter.Player()
 
 def enter():
     global font
