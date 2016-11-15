@@ -8,9 +8,9 @@ import RES
 
 name = "PTile"
 
-List_tile = []
-
 character = PCharacter.Player()
+
+List_tile = []
 
 class Brick:
     prev_mid_x, prev_mid_y  =0, 0
@@ -91,16 +91,16 @@ class Brick:
             #발판 오브젝트 y축 값(높은 발판, 낮은 발판) 결정하기
             if (self.num % 4 == 0 or self.num % 5 == 0):
                 if(self.num % 4 == 0):
-                    if (Brick.prev_mid_y >= 350):
-                        self.next_mid_y = 350
+                    if (Brick.prev_mid_y >= 300):
+                        self.next_mid_y = 300
                     else:
                         #발판의 번호가 4의 배수 일 때
                         #해당 발판의 top은 이전 top + 랜덤값
                         #top은 해당이미지의 정중앙 y값
                         self.next_mid_y = Brick.prev_mid_y + Brick.Brick_prev_height + random.randint(0, 150) + self.Brick_next_height
                 else:
-                    if (Brick.prev_mid_y <= 80):
-                        self.next_mid_y = 80
+                    if (Brick.prev_mid_y <= 150):
+                        self.next_mid_y = 150
                     else:
                         # 발판의 번호가 5의 배수 일 때
                         # 해당 발판의 top은 이전 top - 랜덤값
@@ -209,7 +209,10 @@ class Brick:
         elif (self.num == 8):
             RES.res.SCloud.draw(self.mid_x, self.mid_y)
 
+    def Draw_boundingbox(self):
+        draw_rectangle(*self.get_bb())
+
 #발판 생성자 다수생성 -> 임시값
-temp = [Brick() for i in range(20)]
+temp = [Brick() for i in range(60)]
 
 
