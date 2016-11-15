@@ -4,6 +4,7 @@ import PCharacter
 import random
 import Collision
 import RES
+import Player_UI
 
 List_obstacle = []
 
@@ -88,6 +89,7 @@ class Obstacle:
         if(self.die_flag == True):
             self.die_cnt -= 1
             if(self.die_cnt <= 0):
+                Player_UI.User_UI.User_point -= 500
                 List_obstacle.remove(self)
 
         if(character.move_x >= 500):
@@ -112,4 +114,4 @@ class Obstacle:
             RES.res.Second_Obstacle.clip_draw(self.total_frame_x * 100, self.frame_y * 100, 100, 100, self.x, self.y)
 
 
-temp = [Obstacle() for i in range(20)]
+temp = [Obstacle() for i in range(30)]
