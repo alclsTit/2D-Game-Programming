@@ -12,6 +12,9 @@ class Song:
 
     def __init__(self):
         self.x ,self.y = 750, 450
+        self.bgm = load_music('main_lobby_bgm(Always with me).mp3')
+        self.bgm.set_volume(80)
+        self.bgm.repeat_play()
 
     def update(self):
         if(self.x - 120 < Song.mouse_x and Song.mouse_x < self.x + 120 and self.y - 120 < Song.mouse_y  and Song.mouse_y < self.y + 120):
@@ -22,9 +25,14 @@ class Song:
         #return self.x - 120 , self.y - 120, self.x + 120, self.y + 120
 
 def enter():
-    pass
+    global sel_song
+    sel_song = Song()
+
 
 def exit():
+    global sel_song
+    sel_song.bgm.stop()
+
     del(RES.res.main_lobby)
 
 
@@ -48,7 +56,6 @@ def handle_events(frame_time):
 
 def update(frame_time):
     global sel_song
-    sel_song = Song()
 
     sel_song.update()
     if(Song.coll_with_mouse):
