@@ -14,8 +14,14 @@ class Res:
     #타이틀 이미지
     title_image = None
 
+    #메인로비 이미지
+    main_lobby = None
+
     #스코어 이미지
     score_image = None
+
+    #노래 로딩이미지
+    first_song = None
 
     #배경 이미지
     Background_image = None
@@ -53,6 +59,20 @@ class Res:
     gold_meso_image = None
     Big_gold_meso_image = None
 
+    #바 이미지
+    pinkbin_bar = None
+    sky_bar = None
+    flying_object_bar = None
+    stop_station = None
+
+    #버튼 이미지
+    a_button = None
+    s_button = None
+    d_button = None
+    f_button = None
+    boom_button = None
+    b_button = None
+
     def __init__(self):
         #배경 이미지 로드
         self.Background_image = load_image('Resources/Images/Background/FirstStage_s.png')
@@ -77,6 +97,8 @@ class Res:
         self.logo_image = load_image('Resources/Images/Scene/WarpLogo.png')
         self.title_image = load_image('Resources/Images/Scene/title_logo.png')
         self.score_image = load_image('Resources/Images/Scene/blackboard.png')
+        self.main_lobby = load_image('Resources/Images/Scene/mainlobby.png')
+        self.first_song = load_image('Resources/Images/Scene/FirstSong.png')
 
         #발판 이미지 로드
         self.FBrickImage = load_image('Resources/Images/Tile/Brick_First.png')
@@ -87,5 +109,19 @@ class Res:
         self.FloatingImage_two = load_image('Resources/Images/Tile/Floating_two.png')
         self.FCloud = load_image('Resources/Images/Tile/Cloud_one.png')
         self.SCloud = load_image('Resources/Images/Tile/Cloud_two.png')
+
+        #바 이미지 로드
+        self.sky_bar = load_image('Resources/Images/Upbar/skybar.png')
+        self.pinkbin_bar = load_image('Resources/Images/Upbar/pinkbin_bar_mod.png')
+        self.flying_object_bar = load_image('Resources/Images/Upbar/FlyingObject02_mod.png')
+        self.stop_station = load_image('Resources/Images/Upbar/ButtonStop.png')
+
+        #버튼 이미지 로드
+        self.A_button = load_image('Resources/Images/Button/AButton.png')
+        self.S_button = load_image('Resources/Images/Button/SButton.png')
+        self.D_button = load_image('Resources/Images/Button/DButton.png')
+        self.F_button = load_image('Resources/Images/Button/FButton.png')
+        self.B_button = load_image('Resources/Images/Button/Bonus_Button.png')
+        self.boom_button = load_image('Resources/Images/Button/Boom_Button.png')
 
 
