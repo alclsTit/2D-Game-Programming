@@ -42,6 +42,8 @@ class Player:
     time = 0
     Player_num = 0
 
+    CollwithTile = False
+
     def __init__(self):
         self.x , self.y = 0 , 200
         self.frame_x = 0
@@ -64,10 +66,10 @@ class Player:
             Player.move_x = 500
 
         if(Player.jump_state):
+            Player.CollwithTile = False
             if (self.jump_cnt == 6):
                 self.total_jump_cnt = (self.total_jump_cnt + 1) % 10
                 self.jump_cnt = 0
-
             self.jump_cnt = (self.jump_cnt + 1) % 7
 
             if(self.total_jump_cnt == 1):
@@ -90,7 +92,7 @@ class Player:
                 Player.jump_state = False
                 self.total_jump_cnt = 0
         else:
-            Player.move_y -= 10
+            Player.move_y -= 10   #점프를 공중에서도 할 수 있다? ->수정
 
 
         if(Player.move_y <= 0):
@@ -101,7 +103,7 @@ class Player:
         #Player.move_y = self.move_y
 
     def get_bb(self):
-         return Player.move_x - 25, Player.move_y - 50, Player.move_x + 25, Player.move_y + 50
+         return Player.move_x - 25, Player.move_y - 50, Player.move_x + 25, Player.move_y - 50
 
     def Draw(self):
         RES.res.Player_image.clip_draw(self.frame_x * 100, self.frame_y * 100, 100, 100, Player.move_x, Player.move_y)
