@@ -12,7 +12,7 @@ class Song:
 
     def __init__(self):
         self.x ,self.y = 750, 450
-        self.bgm = load_music('main_lobby_bgm(Always with me).mp3')
+        self.bgm = load_music('football.mp3')
         self.bgm.set_volume(80)
         self.bgm.repeat_play()
 
