@@ -184,6 +184,7 @@ class Brick:
             elif (self.num == 7 or self.num == 8):
                 self.Brick_height_range = 80
 
+            PCharacter.Player.CollwithTile = True
             PCharacter.Player.move_y = self.mid_y + (self.Brick_height_range / 2) + 50
             PCharacter.Player.jump_cnt = 0
 
