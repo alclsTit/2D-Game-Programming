@@ -4,6 +4,7 @@ import random
 import Collision
 import PUpBar
 import RES
+import Player_UI
 
 class Button_beat:
     Hit_count = 0
@@ -15,6 +16,8 @@ class Button_beat:
     d_button = False
     f_button = False
     b_button = False
+
+    can_push_key = False
 
     def __init__(self):
         self.Button_data = []
@@ -57,7 +60,7 @@ class Button_beat:
                         self.point = 200
                         self.move_size = 25
                     elif self.button_num == 6:
-                        self.point = -200
+                        self.point = -500
                         self.move_size = 10
                     else:
                         self.point = 50
@@ -76,7 +79,7 @@ class Button_beat:
                         self.point = 200
                         self.move_size = 20
                     elif self.button_num == 6:
-                        self.point = -200
+                        self.point = -500
                         self.move_size = 25
                     else:
                         self.point = 50
@@ -112,7 +115,7 @@ class Button_beat:
                         self.point = 200
                         self.move_size = 15
                     elif self.button_num == 6:
-                        self.point = -200
+                        self.point = -500
                         self.move_size = 25
                     else:
                         self.point = 50
@@ -137,8 +140,30 @@ class Button_beat:
         for Button_beat.size in range(self.Button_total_num):
             if(PUpBar.Stop_station.coll_x - 50 < Button_beat.Button_List[Button_beat.size][0] and Button_beat.Button_List[Button_beat.size][0] < PUpBar.Stop_station.coll_x + 50 and PUpBar.Stop_station.coll_y - 50 < Button_beat.Button_List[Button_beat.size][1] and Button_beat.Button_List[Button_beat.size][1] < PUpBar.Stop_station.coll_y + 50):
                 Button_beat.Button_List[Button_beat.size][8] = True
+                if Button_beat.a_button == True:
+                    Button_beat.a_button = True
+                    break
+                elif Button_beat.s_button == True:
+                    Button_beat.s_button = True
+                    break
+                elif Button_beat.d_button == True:
+                    Button_beat.d_button = True
+                    break
+                elif Button_beat.f_button == True:
+                    Button_beat.f_button = True
+                    break
+                elif Button_beat.b_button == True:
+                    Button_beat.b_button = True
+                    break
+                else:
+                    Button_beat.Button_List[Button_beat.size][8] = False
             else:
                 Button_beat.Button_List[Button_beat.size][8] = False
+                Button_beat.a_button = False
+                Button_beat.s_button = False
+                Button_beat.d_button = False
+                Button_beat.f_button = False
+                Button_beat.b_button = False
 
         Button_beat.size = 0
         for Button_beat.size in range(self.Button_total_num):
@@ -162,10 +187,14 @@ class Button_beat:
                 Button_beat.Button_List[Button_beat.size][3] = 0
                 Button_beat.Button_List[Button_beat.size][10] -= 1
 
+        Button_beat.size = 0
+        for Button_beat.size in range(self.Button_total_num):
             if Button_beat.Button_List[Button_beat.size][10] < 0:
+                Player_UI.User_UI.User_point += Button_beat.Button_List[Button_beat.size][6]
                 Button_beat.Button_List.remove(Button_beat.Button_List[Button_beat.size])
                 self.Button_total_num -=1
-                Button_beat.size -= 1
+                break
+                #Button_beat.size -= 1
 
     def Draw(self):
         for i in range(self.Button_total_num):
