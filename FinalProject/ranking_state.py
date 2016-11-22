@@ -2,17 +2,17 @@ import GameFramework
 import RES
 from pico2d import *
 
+
 import main_state
 import PCharacter
+import start_state
 
 name = "ranking_state"
 font = None
 
-character = PCharacter.Player()
-
 def enter():
     global font
-    font = load_font('ENCR10B.TTF', 20)
+    font = load_font('ENCR10B.TTF', 40)
 
 def exit():
     del(RES.res.score_image)
@@ -24,8 +24,13 @@ def handle_events(frame_time):
             GameFramework.quit()
         else:
             if (event.type, event.key) == (SDL_KEYDOWN, SDLK_F1):   #랭킹스테이트에서 F1클릭시 메인스테이트로 넘어감
-                GameFramework.change_state(main_state)
-
+                if PCharacter.Player.Player_Die == False:
+                    GameFramework.change_state(main_state)
+            elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_ESCAPE):
+                    close_canvas()
+                #if PCharacter.Player.Player_Die == True:
+                #    GameFramework.change_state(start_state)
+                #    PCharacter.Player.Player_Die = False
 
 def update(frame_time):
     pass
@@ -42,14 +47,14 @@ def draw_ranking():
     f.close()
     my_sort(ranking_data)
 
-    font.draw(300,500 ,"[Ranking]", (255,0,255))
+    font.draw(500,800 ,"[Ranking]", (255,0,255))
     y = 0
     for data in ranking_data[:10]:
-        font.draw(100, 450 - 40 * y, "(User : %d Point : %d Time : %4.1f x : %3d )" %(data['User'],data['Point'],data['time'],data['x']),(255,0,255))
+        font.draw(100, 700 - 50 * y, "(Player : %d Point : %d)" %(data['Player'],data['Point']),(255,0,255))
         y += 1
 
 def draw(frame_time):
     clear_canvas()
-    RES.res.score_image.draw(1500, 900)
+    RES.res.score_image.draw(750, 450)
     draw_ranking()
     update_canvas()
