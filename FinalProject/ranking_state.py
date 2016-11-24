@@ -47,7 +47,7 @@ def draw_ranking():
     f.close()
     my_sort(ranking_data)
 
-    font.draw(500,800 ,"[Ranking]", (255,0,255))
+    font.draw(400,800 ,"[Ranking]", (255,0,255))
     y = 0
     for data in ranking_data[:10]:
         font.draw(100, 700 - 50 * y, "(Player : %d Point : %d)" %(data['Player'],data['Point']),(255,0,255))
