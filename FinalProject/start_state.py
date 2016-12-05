@@ -3,6 +3,8 @@ from pico2d import *
 import RES
 
 import title_state
+#import main_state
+
 
 name = "StartState"
 logo_time = 0.0
@@ -20,9 +22,9 @@ def update(frame_time):
 
     if logo_time > 2.0:
         logo_time = 0
-        GameFramework.push_state(title_state)
+        GameFramework.push_state(title_state) #title_state
 
-    opacify_state -= 0.008
+    opacify_state -= 0.005
     logo_time += frame_time
 
     #global name
