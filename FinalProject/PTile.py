@@ -214,6 +214,6 @@ class Brick:
         draw_rectangle(*self.get_bb())
 
 #발판 생성자 다수생성 -> 임시값
-temp = [Brick() for i in range(60)]
+temp = [Brick() for i in range(50)]
 
 
