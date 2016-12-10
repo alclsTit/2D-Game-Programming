@@ -5,6 +5,7 @@ import PTile
 import Collision
 import GameManager
 import RES
+import Player_UI
 
 character = PCharacter.Player()
 
@@ -195,7 +196,7 @@ class Point_meso:
 
                     if (self.define_meso_pos == 0):
                         self.meso_x = PTile.Brick.mid_x - (PTile.Brick.Brick_width_range / 2) + Point_meso.meso_range
-                        self.meso_y = PTile.Brick.mid_y + (PTile.Brick.Brick_height_range / 2) + self.meso_height_size
+                        self.meso_y = PTile.Brick.mid_y + (PTile.Brick.Brick_height_range / 2) + self.meso_height_size + 5
 
                         self.define_meso_pos += 1
 
@@ -209,14 +210,14 @@ class Point_meso:
                             self.point = self.gold_point
                     else:
                         self.meso_x = Point_meso.prev_meso_x + self.meso_width_size + Point_meso.meso_range
-                        self.meso_y = Point_meso.prev_meso_y + self.meso_rand_y
+                        self.meso_y = Point_meso.prev_meso_y + self.meso_rand_y + 5
 
                         #최대로 메소가 생성 될 수 있는 위치 500
                         if (self.meso_y  > 500):
                             self.meso_y = 500
                          #생성된 메소가 발판보다 낮은 위치에 생성될 때
                         if (self.meso_y < PTile.Brick.mid_y + (PTile.Brick.Brick_height_range / 2)):
-                            self.meso_y = PTile.Brick.mid_y + (PTile.Brick.Brick_height_range / 2) + self.meso_height_size
+                            self.meso_y = PTile.Brick.mid_y + (PTile.Brick.Brick_height_range / 2) + self.meso_height_size + 5
 
                     Point_meso.prev_meso_x = self.meso_x
                     Point_meso.prev_meso_y = self.meso_y
@@ -255,7 +256,7 @@ class Point_meso:
        for Point_meso.meso_counting in range(self.coin_num):
            if(GameManager.List_meso[Point_meso.meso_counting][6] == True):
                if(GameManager.List_meso[Point_meso.meso_counting][5] == 4):
-                   #self.List_meso[i][6] = False
+                   Player_UI.User_UI.User_point += GameManager.List_meso[Point_meso.meso_counting][4]
                    GameManager.List_meso.remove(GameManager.List_meso[Point_meso.meso_counting])
                    self.coin_num  -= 1
                    break
