@@ -73,6 +73,12 @@ class Res:
     boom_button = None
     b_button = None
 
+    #포인트 이펙트 이미지
+    cool_effect = None
+    miss_effect = None
+    perfect_effect = None
+    combo_effect = None
+
     def __init__(self):
         #배경 이미지 로드
         self.Background_image = load_image('Resources/Images/Background/FirstStage_s.png')
@@ -123,5 +129,7 @@ class Res:
         self.F_button = load_image('Resources/Images/Button/FButton.png')
         self.B_button = load_image('Resources/Images/Button/Bonus_Button.png')
         self.boom_button = load_image('Resources/Images/Button/Boom_Button.png')
+
+        #추가 이펙트 이미지 로드
 
 
