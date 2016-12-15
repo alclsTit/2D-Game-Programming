@@ -73,11 +73,8 @@ class Res:
     boom_button = None
     b_button = None
 
-    #포인트 이펙트 이미지
-    cool_effect = None
-    miss_effect = None
-    perfect_effect = None
-    combo_effect = None
+    #콤모 이미지
+    Combo = None
 
     def __init__(self):
         #배경 이미지 로드
@@ -130,6 +127,7 @@ class Res:
         self.B_button = load_image('Resources/Images/Button/Bonus_Button.png')
         self.boom_button = load_image('Resources/Images/Button/Boom_Button.png')
 
-        #추가 이펙트 이미지 로드
+        #콤보 이미지 로드
+        self.Combo = load_image('Resources/Images/Combo/combo_mod.png')
 
 
