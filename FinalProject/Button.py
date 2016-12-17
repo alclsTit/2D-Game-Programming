@@ -193,6 +193,8 @@ class Button_beat:
                 if Button_beat.Button_List[Button_beat.size][5] != 6:
                     if Button_beat.Button_List[Button_beat.size][11] == False:
                         Button_beat.Button_List[Button_beat.size][11] = True
+                        #캐릭터 생명력 감소
+                        Player_UI.User_UI.User_HP -= 5
                         Button_beat.button_combo_cnt += 1
                         Player_UI.User_UI.User_combo += 1
                         if Player_UI.User_UI.User_combo % 10 == 0 and Player_UI.User_UI.User_combo != 0 and Player_UI.User_UI.User_combo % 30 != 0:
