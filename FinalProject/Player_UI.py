@@ -10,6 +10,7 @@ class User_UI:
     def __init__(self):
         self.Max_height = 900
         self.font_size = 20
+        self.HP_font_size = 50
         self.digit_pos = 400
         self.word_pos = 200
 
@@ -40,3 +41,11 @@ class User_UI:
 
         font.draw(self.word_pos, self.Max_height - 5 * self.font_size, "**[Miss]** ", (255, 0, 0))
         font.draw(self.digit_pos, self.Max_height - 5 * self.font_size, "%d Miss" %(User_UI.User_miss))
+
+    def Draw_HP(self):
+        global font
+        font = load_font('ENCR10B.TTF', self.HP_font_size)
+        
+        #임시
+        font.draw(400, 700, "H P",(0,255,0))
+        font.draw(600, 700 ,"%d HP" %(User_UI.User_HP))
