@@ -90,6 +90,7 @@ class Obstacle:
             self.die_cnt -= 1
             if(self.die_cnt <= 0):
                 Player_UI.User_UI.User_point -= 500
+                Player_UI.User_UI.User_HP -= 10
                 List_obstacle.remove(self)
 
         if(character.move_x >= 500):
@@ -99,7 +100,7 @@ class Obstacle:
             self.x = -1000
 
         if (Collision.collide(character, self)):
-            print("Collision  ", self.Obstacle_num)
+            #print("Collision  ", self.Obstacle_num)
 
             self.frame_y = 0
             self.frame_x = 0
