@@ -121,6 +121,11 @@ class Brick:
             PCharacter.Player.move_y = Brick.List_tile[i][1] + Brick.List_tile[i][5]
             PCharacter.Player.jump_cnt = 0
 
+        #종료조건
+        for i in range(Brick_num):
+            if Brick.List_tile[i][8] == True and i == Brick_num:
+                PCharacter.Player.move_size = 0
+
         #self가 문제 -> 항상 마지막놈을 가리키고있음
         #f(Collision.collide(character , self)):
         #   print("Collision  ", self.num)
@@ -140,6 +145,7 @@ class Brick:
 
         #   #if(character.jump_state == True):#참조
         #        #PCharacter.Player.jump_state = False #값 바꿀때
+
 
     def Draw(self,Brick_num):
         for i in range(Brick_num):
