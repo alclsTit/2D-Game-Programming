@@ -52,7 +52,7 @@ def draw_ranking():
     y = 0
     for data in ranking_data[:10]:
         font.draw(100, 700 - 50 * y, "(Player : %d Point : %d Combo : %d Cool Combo : %d Hit Combo : %d Miss : %d)" %(data['Player'],data['Point'],
-                                     data['Combo'],data['Cool Combo'],data['Hit Combo'],data['Miss']),(0,153,204))
+                                     data['Combo'],data['Cool Combo'],data['Hit Combo'],data['Miss']),(0,153,200))
         y += 1
 
 def draw(frame_time):
