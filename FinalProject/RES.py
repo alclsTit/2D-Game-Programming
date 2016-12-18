@@ -76,6 +76,9 @@ class Res:
     #콤모 이미지
     Combo = None
 
+    #체력 이미지
+    HP_Image = None
+
     def __init__(self):
         #배경 이미지 로드
         self.Background_image = load_image('Resources/Images/Background/FirstStage_s.png')
@@ -129,5 +132,8 @@ class Res:
 
         #콤보 이미지 로드
         self.Combo = load_image('Resources/Images/Combo/combo_mod.png')
+
+        #체력 이미지 로드
+        
 
 
