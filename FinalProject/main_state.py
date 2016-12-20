@@ -10,6 +10,7 @@ import PUpBar
 import Player_UI
 import Button
 import Combo
+import main_lobby
 
 import GameFramework
 import title_state
@@ -34,9 +35,8 @@ stop_station = None
 button = None
 combo = None
 
-start_cnt = 0
-start_sound = 0
-Player_num = 0
+stage_num = 0
+stage_tile_cnt = 0
 
 # 초기화 부분
 def enter():
@@ -53,12 +53,22 @@ def enter():
     global user_ui
     global button
     global combo
+    global tile
+    global obstacle
 
     background = PBackground.Background()
     character = PCharacter.Player()
     stage_object = PObject.StageObject()
 
+    if main_lobby.Song.number == 2:
+        stage_tile_cnt = 50
+
+
+    tile = PTile.Brick(stage_tile_cnt)
+
     meso = PObject.Point_meso()
+
+    obstacle = PObstacle.Obstacle()
 
     pinkbin_bar = PUpBar.Pinkbinbar()
     sky_bar = PUpBar.Skybar()
@@ -67,6 +77,9 @@ def enter():
     user_ui = Player_UI.User_UI()
     button = Button.Button_beat()
     combo = Combo.Combo()
+
+    # 발판 생성자 다수생성 -> 임시값
+    #PTile.temp = [PTile.Brick() for i in range(50)]
 
     font = load_font('ENCR10B.TTF', 20)
 
@@ -85,30 +98,48 @@ def exit():
     global sky_bar, pinkbin_bar, flying_object_bar, stop_station, button
     global user_ui
     global combo
+    global tile
+    global obstacle
 
-    if (start_cnt == 0):
-        ranking_data = [{"Player": Player_num,"Point" : Player_UI.User_UI.User_point, "Combo" : Player_UI.User_UI.User_combo,
-                         "Cool Combo" : Player_UI.User_UI.User_coolcombo, "Hit Combo" : Player_UI.User_UI.User_hitcombo,
-                         "Miss" : Player_UI.User_UI.User_miss}]
-        f = open('save.txt', 'w')
-        json.dump(ranking_data, f)
-        f.close()
-    else:
-        f = open('save.txt', 'r')
-        ranking_data = json.load(f)
-        f.close()
+    #if (start_cnt == 0):
+    #ranking_data = [{"Player": 1, "Point": Player_UI.User_UI.User_point,
+    #                 "Combo": Player_UI.User_UI.User_combo,
+    #                 "Cool Combo": Player_UI.User_UI.User_coolcombo, "Hit Combo": Player_UI.User_UI.User_hitcombo,
+    #                 "Miss": Player_UI.User_UI.User_miss}]
+    #f = open('save.txt', 'w')
+    #json.dump(ranking_data, f)#
+    #f.close()
 
-        if (start_cnt != 0):
-            ranking_data.append({"Player": Player_num,"Point" : Player_UI.User_UI.User_point, "Combo" : Player_UI.User_UI.User_combo,
-                                 "Cool Combo": Player_UI.User_UI.User_coolcombo, "Hit Combo": Player_UI.User_UI.User_hitcombo,
-                                 "Miss": Player_UI.User_UI.User_miss})
+    #ranking_data = [{"Player": 1, "Point": Player_UI.User_UI.User_point,
+    #                 "Combo": Player_UI.User_UI.User_combo,
+    #                 "Cool Combo": Player_UI.User_UI.User_coolcombo, "Hit Combo": Player_UI.User_UI.User_hitcombo,
+    #                 "Miss": Player_UI.User_UI.User_miss}]
 
-        f = open('save.txt', 'w')
-        json.dump(ranking_data, f)
-        f.close()
+    #if len(ranking_data) == 1:
+    #    f = open('save.txt', 'w')
+    #    json.dump(ranking_data, f)
+    #    f.close()
+    #else:
+    f = open('save.txt', 'r')
+    ranking_data = json.load(f)
 
-    start_cnt += 1
-    Player_num += 1
+    #if len(ranking_data) == 1:
+    #    ranking_data = [{"Player": 1, "Point": Player_UI.User_UI.User_point,
+    #                     "Combo": Player_UI.User_UI.User_combo,
+    #                     "Cool Combo": Player_UI.User_UI.User_coolcombo, "Hit Combo": Player_UI.User_UI.User_hitcombo,
+    #                     "Miss": Player_UI.User_UI.User_miss}]
+    #    f = open('save.txt', 'w')
+    #    json.dump(ranking_data, f)
+    #    f.close()
+    #else:
+    ranking_data.append(
+        {"Player": len(ranking_data) + 1, "Point": Player_UI.User_UI.User_point, "Combo": Player_UI.User_UI.User_combo,
+         "Cool Combo": Player_UI.User_UI.User_coolcombo, "Hit Combo": Player_UI.User_UI.User_hitcombo,
+         "Miss": Player_UI.User_UI.User_miss})
+
+    f = open('save.txt', 'w')
+    json.dump(ranking_data, f)
+    f.close()
 
     del (background)
     del (character)
@@ -123,6 +154,8 @@ def exit():
     del (user_ui)
     del (button)
     del (combo)
+    del (tile)
+    del (obstacle)
     #close_canvas()
 
 def pause():
@@ -210,29 +243,44 @@ def update(frame_time):
     key_count = (key_count + 1) % 5
 
     character.Update(frame_time)
-    background.Update()
 
-    for PTile.Brick in PTile.List_tile:
-        PTile.Brick.Update()
+    if PCharacter.Player.Player_Die == False:
+        background.Update()
 
-    for PObstacle.Obstacle in PObstacle.List_obstacle:
-        PObstacle.Obstacle.Update()
+        if main_lobby.Song.number == 2:
+            stage_tile_cnt = 50
+            stage_num = 1
 
-    meso.Update_meso()
+        tile.Update(stage_tile_cnt)
 
-    stage_object.Update()
+        # 장애물 업데이트
+        obstacle.Update()
 
-    pinkbin_bar.Update()
+        # 메소 포인트 업데이트
+        meso.Update_meso()
 
-    flying_object_bar.Update()
+        # 스테이지 오브젝트 업데이트(돌고래 / 파도)
+        stage_object.Update()
 
-    stop_station.Update()
+        # 상단의 핑크빈 업데이트
+        pinkbin_bar.Update()
 
-    button.Update(1)
+        # 상단의 날아다니는 오브젝트 업데이트
+        flying_object_bar.Update()
 
-    combo.Update()
+        # 상단의 버튼 스톱모션 업데이트
+        stop_station.Update()
+
+        # 버튼 업데이트
+        button.Update(stage_num)
+
+        # 콤보 업데이트
+        combo.Update()
+
+
 
 def draw(frame_time):
+    #global  stage_tile_cnt
     # global character
     # global background
     # global tile
@@ -253,6 +301,7 @@ def draw(frame_time):
     stop_station.Draw_boundingbox()
 
     user_ui.Draw()
+    user_ui.Draw_HP()
 
     button.Draw()
 
@@ -261,12 +310,13 @@ def draw(frame_time):
     character.Draw()
     character.Draw_boundingbox()
 
-    for PTile.Brick in PTile.List_tile:
-        PTile.Brick.Draw()
+    if main_lobby.Song.number == 2:
+        stage_tile_cnt = 50
+
+    tile.Draw(stage_tile_cnt)
         #PTile.Brick.Draw_boundingbox()
 
-    for PObstacle.Obstacle in PObstacle.List_obstacle:
-        PObstacle.Obstacle.Draw()
+    obstacle.Draw()
 
     meso.Draw_Meso()
 
