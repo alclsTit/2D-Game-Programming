@@ -6,7 +6,7 @@ class User_UI:
     User_miss = 0
     User_coolcombo = 0
     User_hitcombo = 0
-    User_HP = 100
+    User_HP = 200
     def __init__(self):
         self.Max_height = 900
         self.font_size = 20
@@ -45,7 +45,7 @@ class User_UI:
     def Draw_HP(self):
         global font
         font = load_font('ENCR10B.TTF', self.HP_font_size)
-        
+
         #임시
-        font.draw(400, 700, "H P",(0,255,0))
-        font.draw(600, 700 ,"%d HP" %(User_UI.User_HP))
+        font.draw(0, 560, "H P",(0,255,0))
+        font.draw(120, 560 ,"%d HP" %(User_UI.User_HP))
