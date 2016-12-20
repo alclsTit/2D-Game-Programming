@@ -6,7 +6,9 @@ class User_UI:
     User_miss = 0
     User_coolcombo = 0
     User_hitcombo = 0
+    
     User_HP = 200
+
     def __init__(self):
         self.Max_height = 900
         self.font_size = 20
@@ -14,11 +16,11 @@ class User_UI:
         self.digit_pos = 400
         self.word_pos = 200
 
-        User_point = 0
-        User_combo = 0
-        User_miss = 0
-        User_coolcombo = 0
-        User_hitcombo = 0
+        User_UI.User_point = 0
+        User_UI.User_combo = 0
+        User_UI.User_miss = 0
+        User_UI.User_coolcombo = 0
+        User_UI.User_hitcombo = 0
 
     def Update(self):
         pass
@@ -45,7 +47,5 @@ class User_UI:
     def Draw_HP(self):
         global font
         font = load_font('ENCR10B.TTF', self.HP_font_size)
-
-        #임시
         font.draw(0, 560, "H P",(0,255,0))
-        font.draw(120, 560 ,"%d HP" %(User_UI.User_HP))
+        font.draw(120, 56, "%d hp" %(User_UI.User_HP))
