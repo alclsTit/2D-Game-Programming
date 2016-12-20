@@ -14,8 +14,10 @@ def enter():
     global font
     font = load_font('ENCR10B.TTF', 30)
 
+
 def exit():
     del(RES.res.score_image)
+
 
 def handle_events(frame_time):
     events = get_events()
@@ -39,21 +41,28 @@ def update(frame_time):
 def my_sort(input):
     for i in range(len(input)):
         for j in range(i + 1, len(input)):
-            if input[i]['point'] > input[j]['point']:
+            if input[i]['Point'] < input[j]['Point']:
                 input[i], input[j] = input[j], input[i]
 
 def draw_ranking():
+    global font
+
     f = open('save.txt','r')
     ranking_data = json.load(f)
+
     f.close()
     my_sort(ranking_data)
 
-    font.draw(700,800 ,"[Ranking]", (255,0,255))
+    font = load_font('ENCR10B.TTF', 100)
+    font.draw(500,800 ,"[Ranking]", (255,0,255))
+
     y = 0
+    font = load_font('ENCR10B.TTF', 30)
     for data in ranking_data[:10]:
         font.draw(100, 700 - 50 * y, "(Player : %d Point : %d Combo : %d Cool Combo : %d Hit Combo : %d Miss : %d)" %(data['Player'],data['Point'],
                                      data['Combo'],data['Cool Combo'],data['Hit Combo'],data['Miss']),(0,153,200))
         y += 1
+
 
 def draw(frame_time):
     clear_canvas()
