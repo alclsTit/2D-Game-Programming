@@ -16,8 +16,6 @@ from pico2d import *
 #import main_lobby
 
 name = "Game_Ending"
-#font = None
-
 class Ending:
     def __init__(self):
         self.bgm = load_music('virus.mp3')
@@ -77,8 +75,15 @@ def update(frame_time):
 
 
 def draw(frame_time):
+    global font
     clear_canvas()
+
     RES.res.Game_ending.draw(750, 450)
+
+    font = load_font('ENCR10B.TTF', 50)
+    font.draw(100, 800, "ESC : Bye~~", (255, 0, 0))
+    font.draw(100, 750, "SPACE : Ranking Page", (0, 0 , 255))
+
     update_canvas()
 
 
