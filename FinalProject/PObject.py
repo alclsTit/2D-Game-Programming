@@ -6,6 +6,8 @@ import Collision
 import GameManager
 import RES
 import Player_UI
+import GameFramework
+import ranking_state
 
 character = PCharacter.Player()
 
@@ -31,13 +33,13 @@ class StageObject:
         self.mid_x += 20
         self.back_x -= 20
 
-        if(self.front_x >= 1500):
+        if (self.front_x >= 1500):
             self.front_x = 0
 
-        if(self.mid_x >= 2250):
+        if (self.mid_x >= 2250):
             self.mid_x = 750
 
-        if(self.back_x <= 0):
+        if (self.back_x <= 0):
             self.back_x = 1500
 
          #돌고래 업데이트
@@ -77,55 +79,107 @@ class StageObject:
                 self.dol_pos_y = 50
 
     def Draw(self):
-         RES.res.Wave_image.draw(self.front_x, self.front_y)
-         RES.res.Wave_image.draw(self.mid_x, self.mid_y)
-         RES.res.Wave_image.draw(self.back_x, self.back_y)
+        RES.res.Wave_image.draw(self.front_x, self.front_y)
+        RES.res.Wave_image.draw(self.mid_x, self.mid_y)
+        RES.res.Wave_image.draw(self.back_x, self.back_y)
 
-         if (self.show_dolpin == True):
-             RES.res.dolpin_image.clip_draw(self.dolpin_frame * 200, 0, 200, 200, self.dol_pos_x,
-                                               self.dol_pos_y)
-             RES.res.dolpin_image.clip_draw(self.dolpin_frame * 200, 0, 200, 200, self.dol_pos_x - 200,
-                                               self.dol_pos_y)
+        if (self.show_dolpin == True):
+            RES.res.dolpin_image.clip_draw(self.dolpin_frame * 200, 0, 200, 200, self.dol_pos_x,
+                                           self.dol_pos_y)
+            RES.res.dolpin_image.clip_draw(self.dolpin_frame * 200, 0, 200, 200, self.dol_pos_x - 200,
+                                           self.dol_pos_y)
 
-    #def Update_meso(self):
-    #    #메소(포인트) 업데이트
-    #    if(character.move_x >= 500):
-    #        self.meso_x -= character.move_size
+class Exit_door:
+    Exit_flag = False
+    Change_theme= False
+    Show_once = False
 
-    #     #메소와 캐릭터간의 충돌체크
-    #    if(Collision.collide(character,self)):
-    #        self.meso_frame_y = 0
-    #        if(self.disappear_cnt == 0):
-    #            self.meso_y += 5
-    #        elif(self.disappear_cnt == 1):
-    #            self.meso_y += 5
-    #        elif(self.disappear_cnt == 2):
-    #            self.meso_y += 5
-    #        else:
-    #            self.meso_y += 10
+    def __init__(self):
+        self.mid_x = PTile.Brick.List_tile[PTile.Brick.number - 1][0]
+        self.mid_y = PTile.Brick.List_tile[PTile.Brick.number - 1][1]
 
-    #        if(self.disappear_cnt == 3):
-    #            List_meso.remove(self)
+        self.half_width , self.half_height = 400 , 200
 
-    #        self.disappear_cnt = (self.disappear_cnt + 1) % 4
+        self.change_theme = False
+        self.change_scene_cnt = 0
 
-    #def get_meso(self):
-    #    return self.meso_x - 25 , self.meso_y - 25, self.meso_x + 25, self.meso_y + 25
+    def Update(self):
+        if PCharacter.Player.move_x >= 500:
+            self.mid_x -= PCharacter.Player.move_size
+
+        if PCharacter.Player.move_x >= self.mid_x:
+            Exit_door.Exit_flag = True
+
+            if Exit_door.Show_once == False:
+                Exit_door.Show_once = True
+                Exit_door.change_theme = True
+
+            PCharacter.Player.move_size = 0
+
+        if Exit_door.Exit_flag == True:
+            if Exit_door.change_theme == True:
+                #self.bgm = load_music('ending_theme.mp3')
+                #self.bgm.set_volume(60)
+                #self.bgm.repeat_play()
+                Exit_door.change_theme = False
+
+            self.change_scene_cnt += 1
+
+            if self.change_scene_cnt >= 120:
+                self.change_scene_cnt = 0
+                GameFramework.change_state(ranking_state)
 
 
 
-    #def Draw_Meso(self):
-    #    if(self.define_rcolor ==  1):
-    #        StageObject.bronze_meso_image.clip_draw(self.meso_frame_x * 50, self.meso_frame_y * 20, 50, 40, self.meso_x,
-    #                                                self.meso_y)
-    #    elif(self.define_rcolor == 2):
-    #        StageObject.bronze_meso_image.clip_draw(self.meso_frame_x * 50, self.meso_frame_y * 20, 50, 40, self.meso_x,
-    #                                                self.meso_y)
-    #    else:
-    #        StageObject.bronze_meso_image.clip_draw(self.meso_frame_x * 50, self.meso_frame_y * 20, 50, 40, self.meso_x,
-    #                                                self.meso_y)
+        #if Exit_door.Exit_flag == True:
+        #    self.change_theme = True
+        #    self.bgm.repeat_play()
 
+        #if self.change_theme == True:
+        #    self.bgm.repeat_play()
+        #    self.change_theme = False
 
+    def Draw(self):
+        RES.res.Exit_door.draw(self.mid_x, self.mid_y * 2 + self.half_height)
+
+class Exit_effect:
+    def __init__(self):
+        self.mid_x = PTile.Brick.List_tile[PTile.Brick.number - 1][0]
+        self.mid_y = PTile.Brick.List_tile[PTile.Brick.number - 1][1]
+
+        self.half_width , self.half_height = 500 , 150
+        self.start_height = 800
+
+        self.frame_x, self.frame_y = 0 , 0
+        self.total_frame_y = 0
+        self.show_time = 0
+
+    def Update(self):
+        if Exit_door.Exit_flag == True:
+
+            if self.show_time >= 5:
+               self.show_time = 5
+            else:
+               self.show_time += 1
+
+            if self.show_time >= 5:
+                self.mid_x = 750
+
+                if self.start_height == self.half_height + self.mid_y * 2:
+                    self.total_frame_y = 4
+                else:
+                    self.frame_y = (self.frame_y + 1) % 5
+
+                if self.frame_y == 4:
+                    self.total_frame_y = (self.total_frame_y + 1) % 6
+
+                if self.start_height <= self.half_height + self.mid_y * 2:
+                    self.start_height = self.half_height + self.mid_y * 2
+                else:
+                    self.start_height -= 30
+
+    def Draw(self):
+        RES.res.Exit_effect.clip_draw(self.frame_x * 1000, (4 - self.total_frame_y) * 300 ,1000, 300, self.mid_x,  self.start_height)
 
 class Point_meso:
     meso_counting = 0
@@ -141,6 +195,7 @@ class Point_meso:
     IsFirst = True
     coin_num = 0
     meso_range = 50
+
     def __init__(self):
         # 메소 x,y값 초기화
         self.meso_x , self.meso_y = 0 , 0
@@ -165,8 +220,14 @@ class Point_meso:
         self.Store_meso = []
         self.IsDamaged = False
 
+        Point_meso.meso_counting = 0
+        Point_meso.prev_meso_x = 0
+        Point_meso.prev_meso_y = 0
+        Point_meso.IsFirst = True
+        Point_meso.coin_num = 0
+
         # 발판 위에 메소(포인트) 생성
-        for PTile.Brick in PTile.List_tile:
+        for i in range(PTile.Brick.number):
             # 첫 발판은 메소를 생성하지 않는다
             if Point_meso.IsFirst == True:
                 Point_meso.IsFirst = False
@@ -174,29 +235,33 @@ class Point_meso:
 
             while (True):
                 # 발판이 끝날때 까지 메소생성
-                if (self.meso_x + self.meso_width_size > (PTile.Brick.mid_x + PTile.Brick.Brick_width_range / 2)):
+                if (self.meso_x + self.meso_width_size > PTile.Brick.List_tile[i][0] + PTile.Brick.List_tile[i][4]):
                     self.define_meso_pos = 0
                     break
                 else:
                     if (self.rand_ypos_fix == 0):
-                        self.define_rand_ypos = random.randint(1, 5)
+                        self.define_rand_ypos = random.randint(1, 7)
 
                     self.rand_ypos_fix = (self.rand_ypos_fix + 1) % 6
 
                     if (self.define_rand_ypos == 1):
                         self.meso_rand_y = 0
                     elif (self.define_rand_ypos == 2):
-                        self.meso_rand_y = 50
+                        self.meso_rand_y = 15
                     elif (self.define_rand_ypos == 3):
-                        self.meso_rand_y = -50
+                        self.meso_rand_y = -15
                     elif (self.define_rand_ypos == 4):
-                        self.meso_rand_y = 150
+                        self.meso_rand_y = 35
                     elif (self.define_rand_ypos == 5):
-                        self.meso_rand_y = -150
+                        self.meso_rand_y = -35
+                    elif (self.define_rand_ypos == 6):
+                        self.meso_rand_y = 60
+                    elif (self.define_rand_ypos == 7):
+                        self.meso_rand_y = -60
 
                     if (self.define_meso_pos == 0):
-                        self.meso_x = PTile.Brick.mid_x - (PTile.Brick.Brick_width_range / 2) + Point_meso.meso_range
-                        self.meso_y = PTile.Brick.mid_y + (PTile.Brick.Brick_height_range / 2) + self.meso_height_size + 5
+                        self.meso_x = PTile.Brick.List_tile[i][0] - PTile.Brick.List_tile[i][4] + Point_meso.meso_range
+                        self.meso_y = PTile.Brick.List_tile[i][1] + PTile.Brick.List_tile[i][5] + self.meso_height_size
 
                         self.define_meso_pos += 1
 
@@ -210,14 +275,14 @@ class Point_meso:
                             self.point = self.gold_point
                     else:
                         self.meso_x = Point_meso.prev_meso_x + self.meso_width_size + Point_meso.meso_range
-                        self.meso_y = Point_meso.prev_meso_y + self.meso_rand_y + 5
+                        self.meso_y = Point_meso.prev_meso_y + self.meso_rand_y
 
                         #최대로 메소가 생성 될 수 있는 위치 500
                         if (self.meso_y  > 500):
                             self.meso_y = 500
                          #생성된 메소가 발판보다 낮은 위치에 생성될 때
-                        if (self.meso_y < PTile.Brick.mid_y + (PTile.Brick.Brick_height_range / 2)):
-                            self.meso_y = PTile.Brick.mid_y + (PTile.Brick.Brick_height_range / 2) + self.meso_height_size + 5
+                        if (self.meso_y <= PTile.Brick.List_tile[i][1] + PTile.Brick.List_tile[i][5]):
+                            self.meso_y = PTile.Brick.List_tile[i][1] + PTile.Brick.List_tile[i][5] + self.meso_height_size
 
                     Point_meso.prev_meso_x = self.meso_x
                     Point_meso.prev_meso_y = self.meso_y
