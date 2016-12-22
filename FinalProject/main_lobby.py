@@ -9,6 +9,7 @@ name = "main_lobby"
 class Song:
     coll_with_mouse = False
     mouse_x,mouse_y = 0,0
+    number = 0
 
     def __init__(self):
         self.x ,self.y = 750, 450
@@ -22,6 +23,7 @@ class Song:
 
     def update(self):
         if(self.x - 120 < Song.mouse_x and Song.mouse_x < self.x + 120 and self.y - 120 < Song.mouse_y  and Song.mouse_y < self.y + 120):
+            Song.number = 2
             Song.coll_with_mouse = True
         else:
             Song.coll_with_mouse = False

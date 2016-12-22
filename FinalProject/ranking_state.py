@@ -9,14 +9,24 @@ import start_state
 
 name = "ranking_state"
 font = None
+ranking = None
+
+class Ranking_state:
+    def __init__(self):
+        self.bgm = load_music('ending_theme.mp3')
+        self.bgm.set_volume(60)
+        self.bgm.repeat_play()
 
 def enter():
     global font
+    global ranking
     font = load_font('ENCR10B.TTF', 30)
-
+    ranking = Ranking_state()
 
 def exit():
+    global ranking
     del(RES.res.score_image)
+    del(ranking)
 
 
 def handle_events(frame_time):
@@ -65,7 +75,12 @@ def draw_ranking():
 
 
 def draw(frame_time):
+    global font
     clear_canvas()
     RES.res.score_image.draw(750, 450)
     draw_ranking()
+
+    font = load_font('ENCR10B.TTF', 50)
+    font.draw(100, 800,"ESC : Bye~~",(255, 0 , 0))
+
     update_canvas()

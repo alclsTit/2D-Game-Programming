@@ -26,10 +26,21 @@ class Brick:
         self.Brick_data = []
 
         for i in range(Brick_num):
-            if(Brick.number == 0):
+            if  (i == 0):
                 self.num = 3
                 self.mid_x , self.mid_y = 500 , 75
-                self.Brick_width_range ,Brick_height_range = 1000 , 150
+                self.Brick_width_range ,self.Brick_height_range = 1000 , 150
+            elif(i == Brick_num - 1):
+                self.num = 3
+                self.Brick_width_range, self.Brick_height_range = 1000, 150
+                self.mid_x = Brick.List_tile[i - 1][2] + (self.Brick_width_range / 2)
+                self.mid_y = 75
+
+                if (self.mid_y >= 300):
+                    self.mid_y = 300
+
+                if (self.mid_y <= 75):
+                    self.mid_y = 75
             else:
                 self.num = random.randint(1, 8)
 
@@ -58,8 +69,8 @@ class Brick:
                     self.Brick_width_range = 600
                     self.Brick_height_range = 80
 
-                self.mid_x = self.Brick_data[i-1][2] + self.Brick_width_range / 2
-                self.mid_y = self.Brick_data[i-1][3]
+                self.mid_x = Brick.List_tile[i - 1][2] + (self.Brick_width_range / 2)
+                self.mid_y = Brick.List_tile[i - 1][3]
 
                 if(self.mid_y >= 300):
                     self.mid_y = 300
@@ -70,13 +81,14 @@ class Brick:
             Brick.number += 1
 
             # 다음 발판의 시작 위치
-            self.next_startx = self.mid_x + self.Brick_width_range / 2 + random.randint(100, 300)
-            self.next_starty = self.mid_y + random.randint(-200, 300)
+            self.next_startx = self.mid_x + self.Brick_width_range / 2 + random.randint(50, 200)
+            self.next_starty = self.mid_y + random.randint(-150, 150)
 
-            self.Brick_data = [self.midx, self.mid_y,
+            self.Brick_data = [self.mid_x, self.mid_y,
                                self.next_startx, self.next_starty,
                                self.Brick_width_range / 2, self.Brick_height_range / 2,
-                               self.num, Brick.number,
+                               self.num,
+                               Brick.number,
                                self.IsColled]
 
             Brick.List_tile.append(self.Brick_data)
@@ -108,7 +120,7 @@ class Brick:
         #따라서 화면을 구성하는 객체도 일정하게 이동해줘야한다
         if(PCharacter.Player.move_x >= 500):
             for i in range(Brick_num):
-                Brick.List_tile[i][0] -= character.move_size
+                Brick.List_tile[i][0] -= PCharacter.Player.move_size
 
                 if Brick.List_tile[i][0] <= -1500:
                     Brick.List_tile[i][0] = -1500
@@ -116,55 +128,60 @@ class Brick:
         for i in range(Brick_num):
             if Collision.collide_for_brick(character, self , i):
                 Brick.List_tile[i][8] = True
+            else:
+                Brick.List_tile[i][8] = False
 
-        if Brick.List_tile[i][8] == True :
-            PCharacter.Player.move_y = Brick.List_tile[i][1] + Brick.List_tile[i][5]
-            PCharacter.Player.jump_cnt = 0
+            if Brick.List_tile[i][8] == True :
+                PCharacter.Player.CollwithTile = True
+
+                PCharacter.Player.move_y = Brick.List_tile[i][1] + Brick.List_tile[i][5] + character.half_height
+
+                PCharacter.Player.jump_cnt = 0
 
         #종료조건
         for i in range(Brick_num):
             if Brick.List_tile[i][8] == True and i == Brick_num:
                 PCharacter.Player.move_size = 0
 
-        #self가 문제 -> 항상 마지막놈을 가리키고있음
-        #f(Collision.collide(character , self)):
-        #   print("Collision  ", self.num)
+    def Draw(self,stage_tile_cnt):
+        for i in range(stage_tile_cnt):
+            if  Brick.List_tile[i][6] == 1:
+                RES.res.FBrickImage.draw(Brick.List_tile[i][0], Brick.List_tile[i][1])
+            elif  Brick.List_tile[i][6] == 2:
+                RES.res.SBrickImage.draw(Brick.List_tile[i][0], Brick.List_tile[i][1])
+            elif  Brick.List_tile[i][6] == 3:
+                RES.res.TBrickImage.draw(Brick.List_tile[i][0], Brick.List_tile[i][1])
+            elif  Brick.List_tile[i][6] == 4:
+                RES.res.FOBrickImage.draw(Brick.List_tile[i][0], Brick.List_tile[i][1])
+            elif  Brick.List_tile[i][6] == 5:
+                RES.res.FloatingImage_one.draw(Brick.List_tile[i][0], Brick.List_tile[i][1])
+            elif  Brick.List_tile[i][6] == 6:
+                RES.res.FloatingImage_two.draw(Brick.List_tile[i][0], Brick.List_tile[i][1])
+            elif  Brick.List_tile[i][6] == 7:
+                RES.res.FCloud.draw(Brick.List_tile[i][0], Brick.List_tile[i][1])
+            elif  Brick.List_tile[i][6] == 8:
+                RES.res.SCloud.draw(Brick.List_tile[i][0], Brick.List_tile[i][1])
 
-        #   if (self.num == 1 or self.num == 2 or self.num == 3 or self.num == 4):
-        #       self.Brick_height_range = 150
-        #   elif (self.num == 5):
-        #       self.Brick_height_range = 120
-        #   elif (self.num == 6):
-        #       self.Brick_height_range = 80
-        #   elif (self.num == 7 or self.num == 8):
-        #       self.Brick_height_range = 80
 
-        #   PCharacter.Player.CollwithTile = True
-        #   PCharacter.Player.move_y = self.mid_y + (self.Brick_height_range / 2) + 50
-        #   PCharacter.Player.jump_cnt = 0
+                # self가 문제 -> 항상 마지막놈을 가리키고있음
+                # f(Collision.collide(character , self)):
+                #   print("Collision  ", self.num)
 
-        #   #if(character.jump_state == True):#참조
-        #        #PCharacter.Player.jump_state = False #값 바꿀때
+                #   if (self.num == 1 or self.num == 2 or self.num == 3 or self.num == 4):
+                #       self.Brick_height_range = 150
+                #   elif (self.num == 5):
+                #       self.Brick_height_range = 120
+                #   elif (self.num == 6):
+                #       self.Brick_height_range = 80
+                #   elif (self.num == 7 or self.num == 8):
+                #       self.Brick_height_range = 80
 
+                #   PCharacter.Player.CollwithTile = True
+                #   PCharacter.Player.move_y = self.mid_y + (self.Brick_height_range / 2) + 50
+                #   PCharacter.Player.jump_cnt = 0
 
-    def Draw(self,Brick_num):
-        for i in range(Brick_num):
-            if Brick_num[i][6] == 1:
-                RES.res.FBrickImage.draw(Brick_num[i][0], Brick_num[i][1])
-            elif Brick_num[i][6] == 2:
-                RES.res.SBrickImage.draw(Brick_num[i][0], Brick_num[i][1])
-            elif Brick_num[i][6] == 3:
-                RES.res.TBrickImage.draw(Brick_num[i][0], Brick_num[i][1])
-            elif Brick_num[i][6] == 4:
-                RES.res.FOBrickImage.draw(Brick_num[i][0], Brick_num[i][1])
-            elif Brick_num[i][6] == 5:
-                RES.res.FloatingImage_one.draw(Brick_num[i][0], Brick_num[i][1])
-            elif Brick_num[i][6] == 6:
-                RES.res.FloatingImage_two.draw(Brick_num[i][0], Brick_num[i][1])
-            elif Brick_num[i][6] == 7:
-                RES.res.FCloud.draw(Brick_num[i][0], Brick_num[i][1])
-            elif Brick_num[i][6] == 8:
-                RES.res.SCloud.draw(Brick_num[i][0], Brick_num[i][1])
+                #   #if(character.jump_state == True):#참조
+                #        #PCharacter.Player.jump_state = False #값 바꿀때
 
         #print(self.mid_x, self.mid_y, self.num)
         #if(self.num == 1):

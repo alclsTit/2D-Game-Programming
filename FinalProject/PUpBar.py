@@ -34,11 +34,13 @@ class FlyingObject:
 
     def __init__(self):
         self.x , self.y = random.randint(600, 1400), random.randint(800, 890)
-        self.frame_x , self.frame_y = 0, random.randint(0, 1)
+        self.frame_x , self.frame_y =0, random.randint(0, 1)
         self.total_frame_x = 0
 
         self.FlyingObject_data = []
         self.FlyingObject_cnt = 0
+
+        num = 0
 
     def Update(self):
 
@@ -48,10 +50,10 @@ class FlyingObject:
             self.frame_x = 0
             self.frame_y = random.randint(0, 1)
             self.total_frame_x = 0
-            self.move_size_x = random.randint(5, 15)
-            self.move_size_y = random.randint(5, 15)
+            self.move_size = random.randint(1, 10)
+            self.move_size_y = random.randint(1, 10)
 
-            self.FlyingObject_data = [self.x, self.y, self.frame_x, self.frame_y, self.total_frame_x, self.move_size_x, self.move_size_y ]
+            self.FlyingObject_data = [self.x, self.y, self.frame_x, self.frame_y, self.total_frame_x, self.move_size, self.move_size_y ]
 
             FlyingObject.FlyingObject_List.append(self.FlyingObject_data)
             self.FlyingObject_cnt += 1
@@ -65,9 +67,9 @@ class FlyingObject:
         FlyingObject.num = 0
 
         for  FlyingObject.num in range(self.FlyingObject_cnt):
-            FlyingObject.FlyingObject_List[FlyingObject.num][2] = (FlyingObject.FlyingObject_List[FlyingObject.num][2] + 1) % 4
-            if FlyingObject.FlyingObject_List[FlyingObject.num][2] == 3:
-                FlyingObject.FlyingObject_List[FlyingObject.num][4] = (FlyingObject.FlyingObject_List[FlyingObject.num][4] + 1) % 3
+            FlyingObject.FlyingObject_List[ FlyingObject.num][2] = (FlyingObject.FlyingObject_List[ FlyingObject.num][2] + 1) % 4
+            if FlyingObject.FlyingObject_List[ FlyingObject.num][2] == 3:
+                FlyingObject.FlyingObject_List[ FlyingObject.num][4] = (FlyingObject.FlyingObject_List[ FlyingObject.num][4] + 1) % 6
 
         FlyingObject.num = 0
 
@@ -77,12 +79,18 @@ class FlyingObject:
                 self.FlyingObject_cnt -= 1
                 break
 
+
+
     def Draw(self):
         for i in range(self.FlyingObject_cnt):
             RES.res.flying_object_bar.clip_draw(FlyingObject.FlyingObject_List[i][4] * 80, FlyingObject.FlyingObject_List[i][3] * 80, 80, 80,  FlyingObject.FlyingObject_List[i][0], FlyingObject.FlyingObject_List[i][1])
 
+
+
 class Stop_station:
     coll_x , coll_y = 400, 675
+    half_width = 50
+    half_height = 50
 
     def __init__(self):
         self.x ,self.y = 400 , 675

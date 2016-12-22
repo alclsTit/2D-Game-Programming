@@ -2,7 +2,7 @@ import GameFramework
 import RES
 from pico2d import *
 
-import main_state
+import main_lobby
 
 name = "TitleState"
 
@@ -10,7 +10,8 @@ def enter():
     pass
 
 def exit():
-    del(RES.res.title_image)
+    pass
+    #del(RES.res.title_image)
 
 
 def pause():
@@ -29,7 +30,7 @@ def handle_events(frame_time):
             if (event.type, event.key) == (SDL_KEYDOWN, SDLK_ESCAPE):
                 GameFramework.quit()
             elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_SPACE):
-                GameFramework.change_state(main_state)
+                GameFramework.change_state(main_lobby)
 
 
 
@@ -39,6 +40,7 @@ def update(frame_time):
 
 def draw(frame_time):
     clear_canvas()
+    #타이틀 이미지로드 에러
     RES.res.title_image.draw(750, 450)
     update_canvas()
 

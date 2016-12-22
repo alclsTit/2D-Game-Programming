@@ -1,6 +1,7 @@
 from pico2d import *
 import PCharacter
 import RES
+import PObject
 
 character = PCharacter.Player()
 
@@ -14,7 +15,7 @@ class Background:
         self.frame_move_second = 0
         self.switching_cnt = 0
         self.bgm = load_music('Evans[jubeat]_stage01.mp3')
-        self.bgm.set_volume(64)
+        self.bgm.set_volume(60)
         self.bgm.repeat_play()
 
     def Update(self):
@@ -26,6 +27,9 @@ class Background:
 
         if(PCharacter.Player.Player_Die == True):
             self.bgm.stop()
+
+        #if(PObject.Exit_door.Exit_flag == True):
+            #self.bgm.stop()
 
     #def background_soundplay(self):
 

@@ -79,6 +79,15 @@ class Res:
     #체력 이미지
     HP_Image = None
 
+    #종료 이미지
+    Game_ending = None
+
+    #탈출 포트 이미지
+    Exit_door = None
+
+    #탈출 이펙트
+    Exit_effect = None
+
     def __init__(self):
         #배경 이미지 로드
         self.Background_image = load_image('Resources/Images/Background/FirstStage_s.png')
@@ -134,6 +143,14 @@ class Res:
         self.Combo = load_image('Resources/Images/Combo/combo_mod.png')
 
         #체력 이미지 로드
-        
 
+
+        #종료 이미지 로드
+        self.Game_ending = load_image('Resources/Images/Scene/gameover.png')
+
+        #탈출 포트 이미지로드
+        self.Exit_door = load_image('Resources/Images/Object/Stageobject/Exit_door.png')
+
+        #탈출 이펙트
+        self.Exit_effect = load_image('Resources/Images/Object/Stageobject/clear.png')
 

@@ -83,7 +83,6 @@ def run(start_state):
     running = True
     stack = [start_state]
     start_state.enter()
-
     current_time = time.perf_counter()  #루프 진입전 시간을 체크
     while (running):
         frame_time = time.perf_counter() - current_time   #현재시간 - 이전시간
