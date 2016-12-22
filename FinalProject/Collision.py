@@ -14,7 +14,7 @@ def collide(a,b):
     #else:
 
 def collide_for_coin(a,b,num):
-    left_a, bottom_a, right_a, top_a = a.get_bb()
+    left_a, bottom_a, right_a, top_a = a.get_bb_other()
     left_b, bottom_b, right_b, top_b = b.collide_meso(num)
     if left_a > right_b : return False
     if right_a < left_b : return False
@@ -26,6 +26,16 @@ def collide_for_coin(a,b,num):
 def collide_for_brick(a,b,num):
     left_a, bottom_a, right_a, top_a = a.get_bb()
     left_b, bottom_b, right_b, top_b = b.collide_brick(num)
+    if left_a > right_b : return False
+    if right_a < left_b : return False
+    if top_a < bottom_b : return False
+    if bottom_a > top_b : return False
+
+    return True
+
+def collide_for_obstacle(a,b,num):
+    left_a, bottom_a, right_a, top_a = a.get_bb()
+    left_b, bottom_b, right_b, top_b = b.collide_obstacle(num)
     if left_a > right_b : return False
     if right_a < left_b : return False
     if top_a < bottom_b : return False
