@@ -6,7 +6,7 @@ class User_UI:
     User_miss = 0
     User_coolcombo = 0
     User_hitcombo = 0
-    
+
     User_HP = 200
 
     def __init__(self):
@@ -30,7 +30,7 @@ class User_UI:
         font = load_font('ENCR10B.TTF', self.font_size)
 
         font.draw(self.word_pos, self.Max_height - self.font_size, "**[Point]** ", (255, 0, 0))
-        font.draw(self.digit_pos, self.Max_height - self.font_size, "%d Point" %(User_UI.User_point))
+        font.draw(self.digit_pos, self.Max_height - self.font_size, "%d Point" % (User_UI.User_point))
 
         font.draw(self.word_pos, self.Max_height - 2 * self.font_size, "**[Combo]** ", (255, 0, 0))
         font.draw(self.digit_pos, self.Max_height - 2 * self.font_size, "%d Combo" % (User_UI.User_combo))
@@ -39,13 +39,14 @@ class User_UI:
         font.draw(self.digit_pos, self.Max_height - 3 * self.font_size, "%d Cool Combo" % (User_UI.User_coolcombo))
 
         font.draw(self.word_pos, self.Max_height - 4 * self.font_size, "**[HitCombo]** ", (255, 0, 0))
-        font.draw(self.digit_pos, self.Max_height - 4 * self.font_size, "%d Hit Combo" %(User_UI.User_hitcombo))
+        font.draw(self.digit_pos, self.Max_height - 4 * self.font_size, "%d Hit Combo" % (User_UI.User_hitcombo))
 
         font.draw(self.word_pos, self.Max_height - 5 * self.font_size, "**[Miss]** ", (255, 0, 0))
-        font.draw(self.digit_pos, self.Max_height - 5 * self.font_size, "%d Miss" %(User_UI.User_miss))
+        font.draw(self.digit_pos, self.Max_height - 5 * self.font_size, "%d Miss" % (User_UI.User_miss))
 
     def Draw_HP(self):
         global font
         font = load_font('ENCR10B.TTF', self.HP_font_size)
-        font.draw(0, 560, "H P",(0,255,0))
-        font.draw(120, 56, "%d hp" %(User_UI.User_HP))
+
+        font.draw(0, 560, "H P", (0, 255, 0))
+        font.draw(120, 560, "%d hp" % (User_UI.User_HP))

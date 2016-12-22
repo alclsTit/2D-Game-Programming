@@ -5,6 +5,8 @@ import Collision
 import PUpBar
 import RES
 import Player_UI
+import PObject
+import PTile
 
 class Button_beat:
     Hit_count = 0
@@ -38,7 +40,10 @@ class Button_beat:
         self.half_width = 50
         self.half_height = 50
 
+        self.jump_time = 0
+        self.jump_time_buttonNum = 0
 
+        self.jump_button_flag = False
         #버튼 클릭 이미지가 보여진다 or 안보여진다
         self.show_flag = False
 
@@ -47,103 +52,141 @@ class Button_beat:
 
     def Update(self,stage_num):
         if stage_num == 1:
-            if self.Button_total_num < 10:
-                self.create_time = (self.create_time + 1) % 51
-                if self.create_time == 50:
-                    self.Button_total_num += 1
-                    self.button_num = random.randint(1,6)
-                    if self.button_num == 5:
-                        self.point = 200
-                        self.move_size = 25
-                    elif self.button_num == 6:
-                        self.point = -1000
-                        self.move_size = 10
-                    else:
-                        self.point = 50
-                        self.move_size = 25
+            # 1550 시작 -> 25씩 46프레임뒤 / 블록은 10씩
+            #for i in range(PTile.Brick.number):
+            #    if i >= 1:
+            #        if PTile.Brick.List_tile[i][0] + PTile.Brick.List_tile[i][4] - 500 >= 460 and  PTile.Brick.List_tile[i][0] + PTile.Brick.List_tile[i][4] - 500 <= 560:
+            #            if self.jump_time == 0:
+            #                self.point = 200
+            #                self.move_size = 10
 
-                    self.Button_data = [self.x, self.y, self.fx, self.fy, self.toatal_fx, self.button_num, self.point,
-                                        self.move_size, self.IsColled, self.canremove, self.disappear_cnt,self.show_flag, self.show_time]
-                    Button_beat.Button_List.append(self.Button_data)
+            #                self.Button_data = [self.x, self.y, self.fx, self.fy, self.toatal_fx, self.button_num,
+            #                                    self.point,
+            #                                    self.move_size, self.IsColled, self.canremove, self.disappear_cnt,
+            #                                    self.show_flag, self.show_time, self.move_size]
+            #                Button_beat.Button_List.append(self.Button_data)
 
-            elif self.Button_total_num >= 10 and self.Button_total_num < 30:
-                self.create_time = (self.create_time + 1) % 31
-                if self.create_time == 30: #1 7 13 19
-                    self.Button_total_num += 1
-                    self.button_num = random.randint(1, 6)
-                    if self.button_num == 5:
-                        self.point = 200
-                        self.move_size = 25
-                    elif self.button_num == 6:
-                        self.point = -1000
-                        self.move_size = 10
-                    else:
-                        self.point = 50
-                        self.move_size = 25
+            #            self.jump_time = (self.jump_time + 1) % 11
 
-                    self.Button_data = [self.x, self.y, self.fx, self.fy, self.toatal_fx, self.button_num, self.point,
-                                        self.move_size, self.IsColled, self.canremove, self.disappear_cnt,self.show_flag, self.show_time]
-                    Button_beat.Button_List.append(self.Button_data)
+            #            if self.jump_time == 10:
+            #                self.Button_total_num += 1
 
-            elif self.Button_total_num >= 30 and self.Button_total_num < 40:
-                self.create_time = (self.create_time + 1) % 51
-                if self.create_time == 50:
-                    self.Button_total_num += 1
-                    self.button_num = random.randint(1, 6)
-                    if self.button_num == 5:
-                        self.point = 200
-                        self.move_size = 20
-                    elif self.button_num == 6:
-                        self.point = -1000
-                        self.move_size = 25
-                    else:
-                        self.point = 50
-                        self.move_size = 25
+            #            self.jump_button_flag = True
+            #        else:
+            #            self.jump_button_flag = False
 
-                    self.Button_data = [self.x, self.y, self.fx, self.fy, self.toatal_fx, self.button_num, self.point,
-                                    self.move_size, self.IsColled, self.canremove, self.disappear_cnt,self.show_flag, self.show_time]
-                    Button_beat.Button_List.append(self.Button_data)
+            #if self.jump_button_flag == False:
+
+                if self.Button_total_num < 10:
+                    self.create_time = (self.create_time + 1) % 51
+                    if self.create_time == 50:
+                        self.Button_total_num += 1
+                        self.button_num = random.randint(1, 6)
+                        if self.button_num == 5:
+                            self.point = 200
+                            self.move_size = 10
+                        elif self.button_num == 6:
+                            self.point = -1000
+                            self.move_size = 10
+                        else:
+                            self.point = 50
+                            self.move_size = 10
+
+                        self.Button_data = [self.x, self.y, self.fx, self.fy, self.toatal_fx, self.button_num,
+                                            self.point,
+                                            self.move_size, self.IsColled, self.canremove, self.disappear_cnt,
+                                            self.show_flag, self.show_time, self.move_size]
+                        Button_beat.Button_List.append(self.Button_data)
+
+                elif self.Button_total_num >= 10 and self.Button_total_num < 30:
+                    self.create_time = (self.create_time + 1) % 31
+                    if self.create_time == 30:  # 1 7 13 19
+                        self.Button_total_num += 1
+                        self.button_num = random.randint(1, 6)
+                        if self.button_num == 5:
+                            self.point = 200
+                            self.move_size = 10
+                        elif self.button_num == 6:
+                            self.point = -1000
+                            self.move_size = 10
+                        else:
+                            self.point = 50
+                            self.move_size = 10
+
+                        self.Button_data = [self.x, self.y, self.fx, self.fy, self.toatal_fx, self.button_num,
+                                            self.point,
+                                            self.move_size, self.IsColled, self.canremove, self.disappear_cnt,
+                                            self.show_flag, self.show_time, self.move_size]
+                        Button_beat.Button_List.append(self.Button_data)
+
+                elif self.Button_total_num >= 30 and self.Button_total_num < 40:
+                    self.create_time = (self.create_time + 1) % 51
+                    if self.create_time == 50:
+                        self.Button_total_num += 1
+                        self.button_num = random.randint(1, 6)
+                        if self.button_num == 5:
+                            self.point = 200
+                            self.move_size = 10
+                        elif self.button_num == 6:
+                            self.point = -1000
+                            self.move_size = 10
+                        else:
+                            self.point = 50
+                            self.move_size = 10
+
+                        self.Button_data = [self.x, self.y, self.fx, self.fy, self.toatal_fx, self.button_num,
+                                            self.point,
+                                            self.move_size, self.IsColled, self.canremove, self.disappear_cnt,
+                                            self.show_flag, self.show_time, self.move_size]
+                        Button_beat.Button_List.append(self.Button_data)
 
 
-            elif self.Button_total_num >= 40 and self.Button_total_num < 60:
-                self.create_time = (self.create_time + 1) % 31
-                if self.create_time == 30:
-                    self.Button_total_num += 1
-                    self.button_num = random.randint(1, 5)
-                    if self.button_num == 5:
-                        self.point = 200
-                        self.move_size = 25
-                    else:
-                        self.point = 50
-                        self.move_size = 25
+                elif self.Button_total_num >= 40 and self.Button_total_num < 60:
+                    self.create_time = (self.create_time + 1) % 31
+                    if self.create_time == 30:
+                        self.Button_total_num += 1
+                        self.button_num = random.randint(1, 5)
+                        if self.button_num == 5:
+                            self.point = 200
+                            self.move_size = 10
+                        else:
+                            self.point = 50
+                            self.move_size = 10
 
-                    self.Button_data = [self.x, self.y, self.fx, self.fy, self.toatal_fx, self.button_num, self.point,
-                                    self.move_size, self.IsColled, self.canremove, self.disappear_cnt,self.show_flag, self.show_time]
-                    Button_beat.Button_List.append(self.Button_data)
+                        self.Button_data = [self.x, self.y, self.fx, self.fy, self.toatal_fx, self.button_num,
+                                            self.point,
+                                            self.move_size, self.IsColled, self.canremove, self.disappear_cnt,
+                                            self.show_flag, self.show_time, self.move_size]
+                        Button_beat.Button_List.append(self.Button_data)
 
-            elif  self.Button_total_num >= 60:
-                self.create_time = (self.create_time + 1) % 41
-                if self.create_time == 40:
-                    self.Button_total_num += 1
-                    self.button_num = random.randint(1, 6)
-                    if self.button_num == 5:
-                        self.point = 200
-                        self.move_size = 15
-                    elif self.button_num == 6:
-                        self.point = -200
-                        self.move_size = 25
-                    else:
-                        self.point = 50
-                        self.move_size = 25
+                elif self.Button_total_num >= 60:
+                    self.create_time = (self.create_time + 1) % 41
+                    if self.create_time == 40:
+                        self.Button_total_num += 1
+                        self.button_num = random.randint(1, 6)
+                        if self.button_num == 5:
+                            self.point = 200
+                            self.move_size = 10
+                        elif self.button_num == 6:
+                            self.point = -1000
+                            self.move_size = 10
+                        else:
+                            self.point = 50
+                            self.move_size = 10
 
-                    self.Button_data = [self.x, self.y, self.fx, self.fy, self.toatal_fx, self.button_num, self.point,
-                                        self.move_size, self.IsColled, self.canremove, self.disappear_cnt,self.show_flag, self.show_time]
-                    Button_beat.Button_List.append(self.Button_data)
+                        self.Button_data = [self.x, self.y, self.fx, self.fy, self.toatal_fx, self.button_num,
+                                            self.point,
+                                            self.move_size, self.IsColled, self.canremove, self.disappear_cnt,
+                                            self.show_flag, self.show_time , self.move_size]
+                        Button_beat.Button_List.append(self.Button_data)
+
+
 
         #생성된 버튼은 왼쪽으로 이동한다
         Button_beat.size = 0
-        for Button_beat.size in range(self.Button_total_num):
-            Button_beat.Button_List[Button_beat.size][0] -= 10
+        for Button_beat.size in range(len(Button_beat.Button_List)):
+            if Player_UI.User_UI.User_HP > 0 and PObject.Exit_door.Exit_flag == False:
+                    Button_beat.Button_List[Button_beat.size][0] -= Button_beat.Button_List[Button_beat.size][13]
 
         #버튼의 이미지변화(x프레임 변화)
         Button_beat.size = 0
@@ -193,8 +236,12 @@ class Button_beat:
                 if Button_beat.Button_List[Button_beat.size][5] != 6:
                     if Button_beat.Button_List[Button_beat.size][11] == False:
                         Button_beat.Button_List[Button_beat.size][11] = True
-                        #캐릭터 생명력 감소
-                        Player_UI.User_UI.User_HP -= 5
+
+                        if Button_beat.Button_List[Button_beat.size][5] == 5:
+                            Player_UI.User_UI.User_HP += 20
+                            if Player_UI.User_UI.User_HP >= 200:
+                                Player_UI.User_UI.User_HP = 200
+
                         Button_beat.button_combo_cnt += 1
                         Player_UI.User_UI.User_combo += 1
                         if Player_UI.User_UI.User_combo % 10 == 0 and Player_UI.User_UI.User_combo != 0 and Player_UI.User_UI.User_combo % 30 != 0:
@@ -231,10 +278,11 @@ class Button_beat:
                         Button_beat.Button_List[Button_beat.size][11] = True
                         Button_beat.button_combo_cnt = 0
                         Player_UI.User_UI.User_miss += 1
+                        Player_UI.User_UI.User_HP -= 5
 
         Button_beat.Get_total_ButtonNum = self.Button_total_num
 
-    def Draw(self):
+    def Draw(self):#
         for i in range(self.Button_total_num):
             if Button_beat.Button_List[i][5] == 1:
                 RES.res.A_button.clip_draw(Button_beat.Button_List[i][4] * 100 ,Button_beat.Button_List[i][3] * 100,

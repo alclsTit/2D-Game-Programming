@@ -6,113 +6,111 @@ import Collision
 import RES
 import Player_UI
 
-List_obstacle = []
+
 
 character = PCharacter.Player()
-tile = PTile.Brick()
+#tile = PTile.Brick()
 
 class Obstacle:
 
-    pos_x , pos_y = 0 , 0
-    Switch_Obstacle = 0
-    Obstacle_cnt = 0
+    Obstacle_List = []
+    total_Obstacle_num = 0
 
-    Loop_flag = False
-
-    move_cnt = 0
-    Loop_cnt = 0
-    define_cnt = 1
     def __init__(self):
+        self.num = 0
+        self.height = 40
 
-        for PTile.Brick in PTile.List_tile:
-            Obstacle.move_cnt += 1
+        self.half_height = 50
+        self.half_width  = 50
 
-            if (Obstacle.move_cnt % 4 == 0):
-                for PTile.Brick in PTile.List_tile:
-                    Obstacle.Loop_cnt += 1
-                    if(Obstacle.Loop_cnt == 4):
-                        Obstacle.define_cnt += 1
-                        Obstacle.Loop_cnt -= 4 * Obstacle.define_cnt
-                        break
+        self.mid_x , self.mid_y = 0 , 0
+        self.die_cnt , self.die_flag = 7 , False
+        self.frame_x , self.frame_y = 0, 0
+        self.total_frame_x = 0
+        self.show_once = False
 
-                self.Obstacle_num = random.randint(1, 2)  # 장애물의 종류선택
+        self.Obstacle_data = []
 
-                if (self.Obstacle_num == 1 or self.Obstacle_num == 2):
-                    self.height = 50
-                    self.die_cnt = 7
-                    self.die_flag = False
+        for i in range(PTile.Brick.number):
+         if (PTile.Brick.List_tile[i][7] % 4 == 0):
+            self.num = random.randint(1, 2)  # 장애물의 종류선택
 
-                if (PTile.Brick.num == 1):
-                    self.Brick_width_range = 2000
-                elif (PTile.Brick.num == 2):
-                    self.Brick_width_range = 1500
-                elif (PTile.Brick.num == 3):
-                    self.Brick_width_range = 1000
-                elif (PTile.Brick.num == 4):
-                    self.Brick_width_range = 500
-                elif (PTile.Brick.num == 5):  # 부유물1
-                    self.Brick_width_range = 400
-                elif (PTile.Brick.num == 6):  # 부유물2
-                    self.Brick_width_range = 200
-                elif (PTile.Brick.num == 7):  # 구름1
-                    self.Brick_width_range = 300
-                elif (PTile.Brick.num == 8):  # 구름2
-                    self.Brick_width_range = 600
+            #if (self.num == 1 or self.num == 2):
+            #    self.height = 50
+            #    self.die_cnt = 7
+            #    self.die_flag = False
 
-                if (PTile.Brick.num == 1 or PTile.Brick.num == 2 or PTile.Brick.num == 3 or PTile.Brick.num == 4):
-                    self.Brick_height_range = 150
-                elif (PTile.Brick.num == 5):
-                    self.Brick_height_range = 120
-                elif (PTile.Brick.num == 6):
-                    self.Brick_height_range = 80
-                elif (PTile.Brick.num == 7 or PTile.Brick.num == 8):
-                    self.Brick_height_range = 80
+            self.mid_x = PTile.Brick.List_tile[i][0] + random.randint(0, PTile.Brick.List_tile[i][4] / 2)
+            self.mid_y = PTile.Brick.List_tile[i][1] + PTile.Brick.List_tile[i][5] + self.height
 
-                self.x = PTile.Brick.mid_x + random.randint(0, self.Brick_width_range / 4)
-                self.y = PTile.Brick.mid_y + self.Brick_height_range / 2 + self.height - 10
-                self.frame_x = 0
-                self.total_frame_x = 0
-                self.frame_y = random.randint(1, 2)
+            self.frame_x = 0
+            self.frame_y = random.randint(1, 2)
 
-                List_obstacle.append(self)
-            break
+            #9
+            self.Obstacle_data = [self.mid_x, self.mid_y, self.frame_x, self.frame_y, self.total_frame_x, self.num, Obstacle.total_Obstacle_num, self.die_flag, self.die_cnt,self.show_once]
 
-    def get_bb(self):
-        if (self.Obstacle_num == 1 or self.Obstacle_num == 2):
-            return self.x - 50, self.y - 50, self.x + 50, self.y + 50
+            Obstacle.Obstacle_List.append(self.Obstacle_data)
+
+            Obstacle.total_Obstacle_num += 1
+
+    def collide_obstacle(self,Obstacle_num):
+        #if (self.Obstacle_num == 1 or self.Obstacle_num == 2):
+            return Obstacle.Obstacle_List[Obstacle_num][0] - self.half_width, Obstacle.Obstacle_List[Obstacle_num][1] - self.half_height, Obstacle.Obstacle_List[Obstacle_num][0] + self.half_width, Obstacle.Obstacle_List[Obstacle_num][1] + self.half_height
 
     def Update(self):
-        self.frame_x = (self.frame_x + 1) % 6
-        if(self.frame_x == 5):
-            self.total_frame_x = (self.total_frame_x + 1) % 7
 
-        if(self.die_flag == True):
-            self.die_cnt -= 1
-            if(self.die_cnt <= 0):
-                Player_UI.User_UI.User_point -= 500
-                Player_UI.User_UI.User_HP -= 10
-                List_obstacle.remove(self)
+        #장애물 이미지프레임변화
+        for i in range(Obstacle.total_Obstacle_num):
 
+            if(Obstacle.Obstacle_List[i][7] == True):
+                Obstacle.Obstacle_List[i][2] = (Obstacle.Obstacle_List[i][2] + 1) % 5
+                if Obstacle.Obstacle_List[i][2] == 4    :
+                    Obstacle.Obstacle_List[i][4] = (Obstacle.Obstacle_List[i][4] + 1) % 7
+                    Obstacle.Obstacle_List[i][8] -= 1
+            else:
+                Obstacle.Obstacle_List[i][2] = (Obstacle.Obstacle_List[i][2] + 1) % 6
+                if (Obstacle.Obstacle_List[i][2] == 5):
+                    Obstacle.Obstacle_List[i][4] = (Obstacle.Obstacle_List[i][4] + 1) % 7
+
+            if (Obstacle.Obstacle_List[i][8] <= 0):
+                Obstacle.Obstacle_List.remove(Obstacle.Obstacle_List[i])
+                Obstacle.total_Obstacle_num -= 1
+                break
+
+        #캐릭터 이동에 따른 장애물 이동
         if(character.move_x >= 500):
-            self.x -= character.move_size
+            for i in range(Obstacle.total_Obstacle_num):
+                Obstacle.Obstacle_List[i][0] -= character.move_size
 
-        if (self.x < - 1000):
-            self.x = -1000
+                if (Obstacle.Obstacle_List[i][0] <= - 1000):
+                    Obstacle.Obstacle_List[i][0] = -1000
 
-        if (Collision.collide(character, self)):
-            #print("Collision  ", self.Obstacle_num)
+        #장애물 충돌체크
+        for i  in range(Obstacle.total_Obstacle_num):
+            if (Collision.collide_for_obstacle(character, self,i)):
+                #print("Collision  ", self.Obstacle_num)
+                if Obstacle.Obstacle_List[i][9] == False:
+                     #장애물 죽는 모션 이미지 프레임 = 0
 
-            self.frame_y = 0
-            self.frame_x = 0
-            self.die_flag = True
+                    Player_UI.User_UI.User_point -= 1000
+                    Player_UI.User_UI.User_HP -= 10
 
+                    Obstacle.Obstacle_List[i][3] = 0
+                    Obstacle.Obstacle_List[i][4] = 0
+                    Obstacle.Obstacle_List[i][7] = True
+                    Obstacle.Obstacle_List[i][9] = True
 
     def Draw(self):
-        if(self.Obstacle_num == 1):
-            RES.res.First_Obstacle.clip_draw(self.total_frame_x * 100, self.frame_y * 100, 100 ,100, self.x, self.y)
+        for i in range(Obstacle.total_Obstacle_num):
+            if(Obstacle.Obstacle_List[i][5] == 1):
+                RES.res.First_Obstacle.clip_draw(Obstacle.Obstacle_List[i][4] * 100, Obstacle.Obstacle_List[i][3] * 100,
+                                                 100 ,100,
+                                                 Obstacle.Obstacle_List[i][0], Obstacle.Obstacle_List[i][1])
 
-        if(self.Obstacle_num == 2):
-            RES.res.Second_Obstacle.clip_draw(self.total_frame_x * 100, self.frame_y * 100, 100, 100, self.x, self.y)
+            if(Obstacle.Obstacle_List[i][5] == 2):
+                RES.res.Second_Obstacle.clip_draw(Obstacle.Obstacle_List[i][4] * 100, Obstacle.Obstacle_List[i][3] * 100,
+                                                  100 ,100,
+                                                  Obstacle.Obstacle_List[i][0], Obstacle.Obstacle_List[i][1])
 
 
-temp = [Obstacle() for i in range(30)]
+#temp = [Obstacle() for i in range(30)]

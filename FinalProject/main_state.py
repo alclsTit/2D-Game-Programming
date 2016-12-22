@@ -2,8 +2,6 @@ import PBackground
 import PCharacter
 import PTile
 import PObstacle
-import pygame
-import time
 import PObject
 import GameManager
 import PUpBar
@@ -34,6 +32,8 @@ flying_object_bar = None
 stop_station = None
 button = None
 combo = None
+exit_door = None
+exit_effect = None
 
 stage_num = 0
 stage_tile_cnt = 0
@@ -55,13 +55,18 @@ def enter():
     global combo
     global tile
     global obstacle
+    global exit_door
+    global exit_effect
+    global ranking
+
+    ranking = ranking_state.Ranking_state()
 
     background = PBackground.Background()
     character = PCharacter.Player()
     stage_object = PObject.StageObject()
 
     if main_lobby.Song.number == 2:
-        stage_tile_cnt = 50
+        stage_tile_cnt = 51
 
 
     tile = PTile.Brick(stage_tile_cnt)
@@ -77,6 +82,10 @@ def enter():
     user_ui = Player_UI.User_UI()
     button = Button.Button_beat()
     combo = Combo.Combo()
+    exit_door = PObject.Exit_door()
+    exit_effect = PObject.Exit_effect()
+
+
 
     # 발판 생성자 다수생성 -> 임시값
     #PTile.temp = [PTile.Brick() for i in range(50)]
@@ -100,7 +109,10 @@ def exit():
     global combo
     global tile
     global obstacle
+    global exit_door
+    global exit_effect
 
+    #일부러 남겨둔것 -> 재입력시
     #if (start_cnt == 0):
     #ranking_data = [{"Player": 1, "Point": Player_UI.User_UI.User_point,
     #                 "Combo": Player_UI.User_UI.User_combo,
@@ -110,28 +122,10 @@ def exit():
     #json.dump(ranking_data, f)#
     #f.close()
 
-    #ranking_data = [{"Player": 1, "Point": Player_UI.User_UI.User_point,
-    #                 "Combo": Player_UI.User_UI.User_combo,
-    #                 "Cool Combo": Player_UI.User_UI.User_coolcombo, "Hit Combo": Player_UI.User_UI.User_hitcombo,
-    #                 "Miss": Player_UI.User_UI.User_miss}]
-
-    #if len(ranking_data) == 1:
-    #    f = open('save.txt', 'w')
-    #    json.dump(ranking_data, f)
-    #    f.close()
-    #else:
     f = open('save.txt', 'r')
     ranking_data = json.load(f)
 
-    #if len(ranking_data) == 1:
-    #    ranking_data = [{"Player": 1, "Point": Player_UI.User_UI.User_point,
-    #                     "Combo": Player_UI.User_UI.User_combo,
-    #                     "Cool Combo": Player_UI.User_UI.User_coolcombo, "Hit Combo": Player_UI.User_UI.User_hitcombo,
-    #                     "Miss": Player_UI.User_UI.User_miss}]
-    #    f = open('save.txt', 'w')
-    #    json.dump(ranking_data, f)
-    #    f.close()
-    #else:
+
     ranking_data.append(
         {"Player": len(ranking_data) + 1, "Point": Player_UI.User_UI.User_point, "Combo": Player_UI.User_UI.User_combo,
          "Cool Combo": Player_UI.User_UI.User_coolcombo, "Hit Combo": Player_UI.User_UI.User_hitcombo,
@@ -140,6 +134,8 @@ def exit():
     f = open('save.txt', 'w')
     json.dump(ranking_data, f)
     f.close()
+
+
 
     del (background)
     del (character)
@@ -156,6 +152,8 @@ def exit():
     del (combo)
     del (tile)
     del (obstacle)
+    del (exit_door)
+    del (exit_effect)
     #close_canvas()
 
 def pause():
@@ -248,8 +246,11 @@ def update(frame_time):
         background.Update()
 
         if main_lobby.Song.number == 2:
-            stage_tile_cnt = 50
+            stage_tile_cnt = 51
             stage_num = 1
+
+        # 탈출 이펙트
+        exit_effect.Update()
 
         tile.Update(stage_tile_cnt)
 
@@ -277,6 +278,11 @@ def update(frame_time):
         # 콤보 업데이트
         combo.Update()
 
+        #탈출 오브젝트 업데이트
+        exit_door.Update()
+
+
+
 
 
 def draw(frame_time):
@@ -298,7 +304,9 @@ def draw(frame_time):
     flying_object_bar.Draw()
 
     stop_station.Draw()
-    stop_station.Draw_boundingbox()
+
+    #충돌체크 박스
+    #stop_station.Draw_boundingbox()
 
     user_ui.Draw()
     user_ui.Draw_HP()
@@ -308,19 +316,24 @@ def draw(frame_time):
     combo.Draw()
 
     character.Draw()
-    character.Draw_boundingbox()
+    # 충돌체크 박스
+    #character.Draw_boundingbox()
 
     if main_lobby.Song.number == 2:
-        stage_tile_cnt = 50
+        stage_tile_cnt = 51
 
     tile.Draw(stage_tile_cnt)
-        #PTile.Brick.Draw_boundingbox()
+    #PTile.Brick.Draw_boundingbox()
 
     obstacle.Draw()
 
     meso.Draw_Meso()
 
     stage_object.Draw()
+
+    exit_door.Draw()
+
+    exit_effect.Draw()
 
     update_canvas()
 

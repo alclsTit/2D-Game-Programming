@@ -2,12 +2,12 @@ from pico2d import *
 import math
 import RES
 import GameFramework
-import ranking_state
+import GameEnding
+import Player_UI
 
 name = "PCharacter"
 
 #var_steps = [PTile.Brick() for i in range(20)]
-Player_number = 0
 
 #캐릭터 현재위치, 동작 변화, 이미지 로드, 스테이터스
 class Player:
@@ -29,29 +29,28 @@ class Player:
     ACTION_PER_TIME = 1.0 / TIME_PER_ACTION     #동작 2번 - 1초
     FRAMES_PER_ACTION = 4  #한걸음 2초
 
-
-    #jump_cnt = 0
     move_x = 0
     move_y = 200
     move_size = 10
-
     jump_state = False
-    #total_jump_cnt = 0
-
-    point = 0
-    time = 0
-    Player_num = 0
-
     CollwithTile = False
+
+    half_height = 50
+    half_width = 50
 
     def __init__(self):
         self.x , self.y = 0 , 200
         self.frame_x = 0
         self.frame_y = 9
-        self.hp = 100
         self.total_frames = 0.0
         self.jump_cnt = 0
         self.total_jump_cnt = 0
+
+        Player.move_x = 0
+        Player.move_y = 200
+        Player.CollwithTile = False
+        Player.jump_state = False
+        Player.Player_Die = False
 
     def Update(self,frame_time):
         distance = Player.RUN_SPEED_PPS  * frame_time #객체의 이동거리 -> 등속운동가정
@@ -67,43 +66,68 @@ class Player:
 
         if(Player.jump_state):
             Player.CollwithTile = False
-            if (self.jump_cnt == 6):
-                self.total_jump_cnt = (self.total_jump_cnt + 1) % 10
+            if (self.jump_cnt == 5):
+                self.total_jump_cnt = (self.total_jump_cnt + 1) % 10 #10
                 self.jump_cnt = 0
-            self.jump_cnt = (self.jump_cnt + 1) % 7
+            self.jump_cnt = (self.jump_cnt + 1) % 6
 
-            if(self.total_jump_cnt == 1):
-                Player.move_y += 25 #Player.RUN_SPEED_MPS * 2
-            elif(self.total_jump_cnt == 2):
-                Player.move_y += 15 #Player.RUN_SPEED_MPS * 2
+            if (self.total_jump_cnt == 1):
+                Player.move_y += 25  # Player.RUN_SPEED_MPS * 2
+            elif (self.total_jump_cnt == 2):
+                Player.move_y += 15  # Player.RUN_SPEED_MPS * 2
             elif (self.total_jump_cnt == 3):
-                Player.move_y += 10 #Player.RUN_SPEED_MPS * 2;
-            elif(self.total_jump_cnt == 4):
-                Player.move_y += 5 #Player.RUN_SPEED_MPS * 2
-            elif(self.total_jump_cnt == 5):
+                Player.move_y += 10  # Player.RUN_SPEED_MPS * 2;
+            elif (self.total_jump_cnt == 4):
+                Player.move_y += 5  # Player.RUN_SPEED_MPS * 2
+            elif (self.total_jump_cnt == 5):
                 Player.move_y -= 5
-            elif(self.total_jump_cnt == 6):
+            elif (self.total_jump_cnt == 6):
                 Player.move_y -= 10
-            elif(self.total_jump_cnt == 7):
+            elif (self.total_jump_cnt == 7):
                 Player.move_y -= 15
-            elif(self.total_jump_cnt == 8):
+            elif (self.total_jump_cnt == 8):
                 Player.move_y -= 25
-            elif(self.total_jump_cnt >= 9):
+            elif (self.total_jump_cnt >= 9):
                 Player.jump_state = False
                 self.total_jump_cnt = 0
+            #if(self.total_jump_cnt == 1):
+            #    Player.move_y += 25 #Player.RUN_SPEED_MPS * 2
+            #elif(self.total_jump_cnt == 2):
+            #    Player.move_y += 15 #Player.RUN_SPEED_MPS * 2
+            #elif (self.total_jump_cnt == 3):
+            #    Player.move_y += 10 #Player.RUN_SPEED_MPS * 2;
+            #elif(self.total_jump_cnt == 4):
+            #    Player.move_y += 5 #Player.RUN_SPEED_MPS * 2
+            #elif(self.total_jump_cnt == 5):
+            #    Player.move_y -= 5
+            #elif(self.total_jump_cnt == 6):
+            #    Player.move_y -= 10
+            #elif(self.total_jump_cnt == 7):
+            #    Player.move_y -= 15
+            #elif(self.total_jump_cnt == 8):
+            #    Player.move_y -= 25
+            #elif(self.total_jump_cnt >= 9):
+            #    Player.jump_state = False
+            #    self.total_jump_cnt = 0
         else:
             Player.move_y -= 10   #점프를 공중에서도 할 수 있다? ->수정
 
 
-        if(Player.move_y <= 0):
-            GameFramework.change_state(ranking_state)
+        if(Player.move_y <= 0 or Player_UI.User_UI.User_HP <= 0):
+            GameFramework.change_state(GameEnding)
             Player.Player_Die = True
             #Player.Player_Die = True
 
         #Player.move_y = self.move_y
 
+        if(Player_UI.User_UI.User_HP <= 0):
+            Player.move_size = 0
+
     def get_bb(self):
-         return Player.move_x - 25, Player.move_y - 50, Player.move_x + 25, Player.move_y - 50
+         return Player.move_x - 10, Player.move_y - 50, Player.move_x + 10, Player.move_y - 50
+
+    def get_bb_other(self):
+        return Player.move_x - 50, Player.move_y - 50, Player.move_x + 50, Player.move_y + 50
 
     def Draw(self):
         RES.res.Player_image.clip_draw(self.frame_x * 100, self.frame_y * 100, 100, 100, Player.move_x, Player.move_y)
